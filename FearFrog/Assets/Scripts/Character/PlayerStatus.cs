@@ -11,12 +11,14 @@ public class PlayerStatus : MonoBehaviour
     // Player status
     private bool m_isGrounded = true;
     public bool IsGrounded { get { return m_isGrounded; } set { m_isGrounded = value; } }
+    private bool m_isGroundedPrev = true;
+    public bool IsGroundedPrev { get { return m_isGroundedPrev; } set { m_isGroundedPrev = value; } }
     private bool m_isSprinting = false;
     public bool IsSprinting { get { return m_isSprinting; } set { m_isSprinting = value; } }
     private bool m_isCrouching = false;
     public bool IsCrounching { get { return m_isCrouching; } set { m_isCrouching = value; } }
     private RaycastHit m_groundHit;
-    public RaycastHit GroundHit { get { return m_groundHit; } }
+    public RaycastHit GroundHit { get { return m_groundHit; } set { m_groundHit = value; } }
     
     private Vector3 m_groundNormal = new Vector3();         // Normal of the ground the player is standing on
     public Vector3 GroundNormal { get { return m_groundNormal; } }
@@ -38,6 +40,7 @@ public class PlayerStatus : MonoBehaviour
     public float GcRadius { get { return m_gcRadius; } }
     [SerializeField] private float m_groundDrag = 5f;
     [SerializeField] private float m_airDrag = 0f;
+    [SerializeField] private float m_stepDownDistance = 0.2f;
     
 
     // Awake
@@ -63,15 +66,14 @@ public class PlayerStatus : MonoBehaviour
     // FixedUpdate
     void FixedUpdate()
     {
-        GroundedCheck();
-        Debug.Log(m_isGrounded);
+        GroundCheck();
     }
 
 
     // Check whether the player is on the ground
-    private void GroundedCheck()
+    private void GroundCheck()
     {
-        bool prevIsGrounded = m_isGrounded;
+        m_isGroundedPrev = m_isGrounded;
         m_isGrounded = Physics.SphereCast(transform.position, m_gcRadius, Vector3.down, out m_groundHit,
             -m_footPos.localPosition.y);
         
@@ -80,12 +82,23 @@ public class PlayerStatus : MonoBehaviour
         m_groundNormal = m_groundHit.normal;
         
         // Update vertical velocity to 0 when just landed on ground
-        if (m_isGrounded && !prevIsGrounded)
+        if (m_isGrounded && !m_isGroundedPrev)
         {
             Vector3 newVelocity = m_playerRb.linearVelocity;
             newVelocity.y = 0f;
             m_playerRb.linearVelocity = newVelocity;   
         }
+    }
+    
+    // Apply a second ground check with slightly longer detection distance
+    public void SecondGroundCheck()
+    {
+        m_isGrounded = Physics.SphereCast(transform.position, m_gcRadius, Vector3.down, out m_groundHit,
+            -m_footPos.localPosition.y + m_stepDownDistance);
+        
+        // Update variables
+        m_playerRb.linearDamping = m_isGrounded ? m_groundDrag : m_airDrag;
+        m_groundNormal = m_groundHit.normal;
     }
     
     
