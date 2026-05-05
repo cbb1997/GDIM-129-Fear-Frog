@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -91,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
         float cos;
         if (PlayerStatus.Instance.IsGrounded)
         {
-            cos = Vector3.Dot(moveDirection, PlayerStatus.Instance.GroundNormal);       // Cosine of angle between new move direction and normal of surface
+            cos = Vector3.Dot(moveDirection, PlayerStatus.Instance.GroundHit.normal);       // Cosine of angle between new move direction and normal of surface
             float degTheta = Mathf.Acos(cos) * Mathf.Rad2Deg;       // Angle between new move direction and normal of surface in degrees
             degTheta -= 90;
             
@@ -121,12 +122,26 @@ public class PlayerMovement : MonoBehaviour
     private void Jump(InputAction.CallbackContext ctx)
     {
         // Perform jump is player is grounded
-        if (PlayerStatus.Instance.IsGrounded)
+        if (PlayerStatus.Instance.IsGrounded && !PlayerStatus.Instance.IsJumping)
         {
             // StopCrouching();
             PlayerStatus.Instance.PlayerRb.AddForce(new Vector3(0f, m_jumpForce, 0f), ForceMode.VelocityChange);
             PlayerStatus.Instance.IsGrounded = false;
+            // Update jumping state
+            PlayerStatus.Instance.IsJumping = true;
+            StartCoroutine(ResetJumping(0.1f));
         }
+    }
+    
+    private IEnumerator ResetJumping(float targetTime)      // Reset player jumping state after a short time
+    {
+        float timer = 0f;
+        while (timer < targetTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        PlayerStatus.Instance.IsJumping = false;
     }
     
     

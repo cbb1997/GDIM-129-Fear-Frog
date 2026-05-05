@@ -3,10 +3,15 @@ using UnityEngine;
 
 public class PlayerPhysics : MonoBehaviour
 {
-    // Member variables
+    // Grounded check variables
+    private float m_gcRadius = 0.35f;       // Grounndeed check shpere radius
+    [SerializeField] private float m_groundDrag = 5f;
+    [SerializeField] private float m_airDrag = 0f;
+    
+    // Gravity & Dynamic friction member variables
     private float m_playerWeight;
     [SerializeField] private float m_gravity = 9.81f;
-    private float m_dfCoef = 0.4f;      // Dynamic friction coefficient
+    private float m_dfCoef = 0.4f;          // Dynamic friction coefficient
     [SerializeField] private float m_stepUpHeight = 0.4f;       // Player floating height
     [SerializeField] private float m_stepDownHeight = 0.2f;     // Player step down distance
     
@@ -25,8 +30,10 @@ public class PlayerPhysics : MonoBehaviour
     // FixedUpdate
     private void FixedUpdate()
     {
-        CheckStepingDown();
+        // Ground check
+        GroundCheck();
         
+        // Player physics
         if (PlayerStatus.Instance.IsGrounded)       // Player on ground
         {
             // Apply dynamic friction
@@ -46,6 +53,37 @@ public class PlayerPhysics : MonoBehaviour
     }
     
     
+    // Check whether the player is on the ground
+    private void GroundCheck()
+    {
+        PlayerStatus.Instance.IsGroundedPrev = PlayerStatus.Instance.IsGrounded;
+        PlayerStatus.Instance.IsGrounded = Physics.SphereCast(transform.position, m_gcRadius, 
+            Vector3.down, out PlayerStatus.Instance.GroundHit, -PlayerStatus.Instance.FootPos.localPosition.y);
+        
+        PlayerStatus.Instance.PlayerRb.linearDamping = PlayerStatus.Instance.IsGrounded ? m_groundDrag : m_airDrag;
+        // Update vertical velocity to 0 when just landed on ground
+        if (PlayerStatus.Instance.IsGrounded && !PlayerStatus.Instance.IsGroundedPrev)
+        {
+            Vector3 newVelocity = PlayerStatus.Instance.PlayerRb.linearVelocity;
+            newVelocity.y = 0f;
+            PlayerStatus.Instance.PlayerRb.linearVelocity = newVelocity;
+        }
+        
+        // Prevent player from free falling from edges of low heights
+        if (!PlayerStatus.Instance.IsGrounded && PlayerStatus.Instance.IsGroundedPrev)
+        {
+            if (!PlayerStatus.Instance.IsJumping)
+            {
+                // Second ground check
+                PlayerStatus.Instance.IsGrounded = Physics.SphereCast(transform.position, m_gcRadius, 
+                    Vector3.down, out PlayerStatus.Instance.GroundHit, 
+                    -PlayerStatus.Instance.FootPos.localPosition.y + m_stepDownHeight);
+                
+                PlayerStatus.Instance.PlayerRb.linearDamping = PlayerStatus.Instance.IsGrounded ? m_groundDrag : m_airDrag;
+            }
+        }
+    }
+    
     // Apply gravity manually
     private void ApplyGravity()
     {
@@ -56,8 +94,8 @@ public class PlayerPhysics : MonoBehaviour
     private void ApplyGroundFriction()
     {
         // Calculate the normal force applied by the ground
-        float cos = Vector3.Dot(-PlayerStatus.Instance.GroundNormal, Vector3.down);    // Cosine of angle between gravity force and normal force
-        Vector3 gravityNormal = cos * m_playerWeight * m_gravity * (-PlayerStatus.Instance.GroundNormal);
+        float cos = Vector3.Dot(-PlayerStatus.Instance.GroundHit.normal, Vector3.down);    // Cosine of angle between gravity force and normal force
+        Vector3 gravityNormal = cos * m_playerWeight * m_gravity * (-PlayerStatus.Instance.GroundHit.normal);
         Vector3 frictionForce = m_dfCoef * gravityNormal.magnitude * -PlayerStatus.Instance.PlayerRb.linearVelocity.normalized;
         
         PlayerStatus.Instance.PlayerRb.AddForce(frictionForce, ForceMode.Acceleration);
@@ -72,7 +110,7 @@ public class PlayerPhysics : MonoBehaviour
         // Adjustment for ground point NOT exactly below the player's center
         playerCenter.y = PlayerStatus.Instance.GroundHit.point.y;
         float d = Vector3.Distance(PlayerStatus.Instance.GroundHit.point, playerCenter);
-        float r = PlayerStatus.Instance.GcRadius;
+        float r = m_gcRadius;
         float adjust = r - Mathf.Sqrt(Mathf.Pow(r, 2) - Mathf.Pow(d, 2));
         stepUpAmount -= adjust;
         if (Mathf.Abs(stepUpAmount) >= 0.001f)
@@ -81,13 +119,19 @@ public class PlayerPhysics : MonoBehaviour
         }
     }
     
-    // Prevent player from free falling from edges of low heights
-    private void CheckStepingDown()
+    
+    // DEBUG USE
+    private void OnDrawGizmos()
     {
-        if (!PlayerStatus.Instance.IsGrounded && PlayerStatus.Instance.IsGroundedPrev)
-        {
-            PlayerStatus.Instance.SecondGroundCheck();
-        }
+        // Ground check
+        Gizmos.color = Color.blue;
+        Vector3 drawPos = transform.position;
+        drawPos.y += PlayerStatus.Instance.FootPos.localPosition.y;
+        Gizmos.DrawSphere(drawPos, m_gcRadius);
+
+        // Grounded point
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(PlayerStatus.Instance.GroundHit.point, 0.07f);
     }
 }
 
