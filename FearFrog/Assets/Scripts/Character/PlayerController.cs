@@ -129,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerStatus.Instance.IsGrounded = false;
             // Update jumping state
             PlayerStatus.Instance.IsJumping = true;
-            StartCoroutine(ResetJumping(0.1f));
+            StartCoroutine(ResetJumping(0.04f));
         }
     }
     
