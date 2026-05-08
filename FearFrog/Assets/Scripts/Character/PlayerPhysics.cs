@@ -12,7 +12,7 @@ public class PlayerPhysics : MonoBehaviour
     
     // Gravity & Dynamic friction member variables
     private float m_playerWeight;
-    [SerializeField] private float m_gravity = 9.81f;
+    private float m_gravity = 9.81f * 2.5f;
     private float m_dfCoef = 0.4f;          // Dynamic friction coefficient
     [SerializeField] private float m_stepUpHeight = 0.4f;       // Player floating height
     [SerializeField] private float m_stepDownHeight = 0.2f;     // Player step down distance
@@ -66,23 +66,17 @@ public class PlayerPhysics : MonoBehaviour
         PlayerStatus.Instance.IsGroundedPrev = PlayerStatus.Instance.IsGrounded;
         
         // Ground check
-        RaycastHit[] arr2;
         if (PlayerStatus.Instance.IsJumping)
         {
             // Prevent failing to jump up
             PlayerStatus.Instance.IsGrounded = false;
         }
-        else if (PlayerStatus.Instance.IsGroundedPrev)
-        {
-            PlayerStatus.Instance.IsGrounded = Physics.SphereCast(transform.position, m_gcRadius, 
-                Vector3.down, out PlayerStatus.Instance.GroundHit, 
-                -PlayerStatus.Instance.FootPos.localPosition.y + m_stepDownHeight);
-        }
         else
         {
+            float gcHeightAdjust = (PlayerStatus.Instance.IsGroundedPrev) ? m_stepDownHeight : 0f;
             PlayerStatus.Instance.IsGrounded = Physics.SphereCast(transform.position, m_gcRadius, 
-                Vector3.down, out PlayerStatus.Instance.GroundHit,
-                -PlayerStatus.Instance.FootPos.localPosition.y);
+                Vector3.down, out PlayerStatus.Instance.GroundHit, 
+                -PlayerStatus.Instance.FootPos.localPosition.y + gcHeightAdjust);
         }
         
         // Update status
@@ -157,14 +151,6 @@ public class PlayerPhysics : MonoBehaviour
             // Grounded point
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(PlayerStatus.Instance.GroundHit.point, 0.05f);
-            
-            // Foot step space check
-            Gizmos.color = Color.purple;
-            Gizmos.DrawSphere(footStepPos, 0.05f);
-            Vector3 endPoint = footStepPos + Vector3.down * (1 + 0.4f);
-            Gizmos.DrawLine(footStepPos, endPoint);
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(testHit.point, 0.02f);
         }
     }
 }

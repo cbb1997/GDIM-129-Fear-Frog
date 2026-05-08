@@ -7,13 +7,13 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     // Movement member variables
-    [SerializeField] private float m_walkAcceleration = 35f;
-    [SerializeField] private float m_maxWalkVelocity = 6f;
-    [SerializeField] private float m_sprintAcceleration = 60f;
-    [SerializeField] private float m_maxSprintVelocity = 9f;
+    [SerializeField] private float m_walkAcceleration = 30f;
+    [SerializeField] private float m_maxWalkAirVelocity = 1.5f;
+    [SerializeField] private float m_sprintAcceleration = 45f;
+    [SerializeField] private float m_maxSprintAirVelocity = 3.5f;
     [SerializeField] private float m_crouchAcceleration = 20f;
     private float m_currMoveAcceleration;
-    private float m_currMaxVelocity;
+    private float m_currMaxAirVelocity;
     
     // Look member variables
     [SerializeField] private float m_cameraSensitivity = 100f;
@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float m_yOritation = 0;
     
     // Jump member variables
-    [SerializeField] private float m_jumpForce = 5f;
+    [SerializeField] private float m_jumpAcceleration = 250f;
     
     // Crouch height change member variables
     private float m_standCameraHeight = 0.85f;
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // Default movement speed to walk
         m_currMoveAcceleration = m_walkAcceleration;
-        m_currMaxVelocity = m_maxWalkVelocity;
+        m_currMaxAirVelocity = m_maxWalkAirVelocity;
         
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -108,9 +108,9 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 currHorVelocity = PlayerStatus.Instance.PlayerRb.linearVelocity;
         currHorVelocity.y = 0f;
-        if (currHorVelocity.magnitude > m_currMaxVelocity)
+        if (currHorVelocity.magnitude > m_currMaxAirVelocity)
         {
-            currHorVelocity = currHorVelocity.normalized * m_currMaxVelocity;
+            currHorVelocity = currHorVelocity.normalized * m_currMaxAirVelocity;
             // Player's fall down speed should not be affected by velocity control
             currHorVelocity.y = PlayerStatus.Instance.PlayerRb.linearVelocity.y;
             PlayerStatus.Instance.PlayerRb.linearVelocity = currHorVelocity;
@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerStatus.Instance.IsGrounded && !PlayerStatus.Instance.IsJumping)
         {
             // StopCrouching();
-            PlayerStatus.Instance.PlayerRb.AddForce(new Vector3(0f, m_jumpForce, 0f), ForceMode.VelocityChange);
+            PlayerStatus.Instance.PlayerRb.AddForce(new Vector3(0f, m_jumpAcceleration, 0f), ForceMode.Acceleration);
             PlayerStatus.Instance.IsGrounded = false;
             // Update jumping state
             PlayerStatus.Instance.IsJumping = true;
@@ -168,7 +168,7 @@ public class PlayerMovement : MonoBehaviour
         {
             PlayerStatus.Instance.IsSprinting = true;
             m_currMoveAcceleration = m_sprintAcceleration;
-            m_currMaxVelocity = m_maxSprintVelocity;
+            m_currMaxAirVelocity = m_maxSprintAirVelocity;
         }
     }
 
@@ -178,7 +178,7 @@ public class PlayerMovement : MonoBehaviour
         {
             PlayerStatus.Instance.IsSprinting = false;
             m_currMoveAcceleration = m_walkAcceleration;
-            m_currMaxVelocity = m_maxWalkVelocity;   
+            m_currMaxAirVelocity = m_maxWalkAirVelocity;   
         }
     }
     
