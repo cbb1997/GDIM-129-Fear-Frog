@@ -5535,7 +5535,7 @@ MonoBehaviour:
   m_maxWalkAirVelocity: 1.5
   m_sprintAcceleration: 45
   m_maxSprintAirVelocity: 5
-  m_crouchAcceleration: 20
+  m_crouchAcceleration: 18
   m_cameraSensitivity: 50
   m_jumpAcceleration: 320
 --- !u!114 &1028144253

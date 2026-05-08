@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float m_maxWalkAirVelocity = 1.5f;
     [SerializeField] private float m_sprintAcceleration = 45f;
     [SerializeField] private float m_maxSprintAirVelocity = 3.5f;
-    [SerializeField] private float m_crouchAcceleration = 20f;
+    [SerializeField] private float m_crouchAcceleration = 18f;
     private float m_currMoveAcceleration;
     private float m_currMaxAirVelocity;
     
@@ -24,15 +24,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float m_jumpAcceleration = 250f;
     
     // Crouch height change member variables
+    private float m_stepUpHeight = 0.4f;
     private float m_standCameraHeight = 0.85f;
-    private float m_crouchCameraHeight = -0.1f;
-    private float m_crouchShrinkRatio = 0.5f;
+    private float m_crouchCameraHeight = 0.05f;
+    private float m_crouchShrinkRatio = 0.4f;
     
 
     // Start
     void Start()
     {
-        // Default movement speed to walk
+        // Variable initialization
         m_currMoveAcceleration = m_walkAcceleration;
         m_currMaxAirVelocity = m_maxWalkAirVelocity;
         
@@ -124,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
         // Perform jump is player is grounded
         if (PlayerStatus.Instance.IsGrounded && !PlayerStatus.Instance.IsJumping)
         {
-            // StopCrouching();
+            StopCrouching();
             PlayerStatus.Instance.PlayerRb.AddForce(new Vector3(0f, m_jumpAcceleration, 0f), ForceMode.Acceleration);
             PlayerStatus.Instance.IsGrounded = false;
             // Update jumping state
@@ -216,9 +217,11 @@ public class PlayerMovement : MonoBehaviour
             PlayerStatus.Instance.IsCrounching = true;
             m_currMoveAcceleration = m_crouchAcceleration;
             // Update player entity and camera
-            // StartCoroutine(CrounchCameraChange(new Vector3(0f, m_crouchCameraHeight, 0f)));
-            // m_playerEntity.localScale = new Vector3(1f, m_crouchShrinkRatio, 1f);
-            // m_playerEntity.localPosition = new Vector3(0f, m_crouchShrinkRatio - 1f, 0f);
+            StartCoroutine(CrounchCameraChange(new Vector3(0f, m_crouchCameraHeight, 0f)));
+            float localScaleY = (2f * (1f - m_crouchShrinkRatio) - m_stepUpHeight) / 2f;
+            float localPosY = m_stepUpHeight + localScaleY - 1f;
+            PlayerStatus.Instance.PlayerEntity.localScale = new Vector3(1f, localScaleY, 1f);
+            PlayerStatus.Instance.PlayerEntity.localPosition = new Vector3(0f, localPosY, 0f);
         }
     }
 
@@ -229,15 +232,20 @@ public class PlayerMovement : MonoBehaviour
             PlayerStatus.Instance.IsCrounching = false;
             m_currMoveAcceleration = m_walkAcceleration;
             // Update player entity and camera
-            // StartCoroutine(CrounchCameraChange(new Vector3(0f, m_standCameraHeight, 0f)));
-            // m_playerEntity.localScale = new Vector3(1f, 1f, 1f);
-            // m_playerEntity.localPosition = new Vector3(0f, 0f, 0f);
+            StartCoroutine(CrounchCameraChange(new Vector3(0f, m_standCameraHeight, 0f)));
+            PlayerStatus.Instance.PlayerEntity.localScale = new Vector3(1f, 1f - m_stepUpHeight / 2f, 1f);
+            PlayerStatus.Instance.PlayerEntity.localPosition = new Vector3(0f, m_stepUpHeight / 2f, 0f);
         }
     }
 
     // Smooth transition of main camera when toggling crounch
     private IEnumerator CrounchCameraChange(Vector3 targetPos)
     {
-        yield return null;
+        while (Vector3.Distance(PlayerStatus.Instance.CameraContainer.localPosition, targetPos) > 0.01f)
+        {
+            PlayerStatus.Instance.CameraContainer.localPosition =
+                Vector3.Lerp(PlayerStatus.Instance.CameraContainer.localPosition, targetPos, 0.25f);
+            yield return null;
+        }
     }
 }
