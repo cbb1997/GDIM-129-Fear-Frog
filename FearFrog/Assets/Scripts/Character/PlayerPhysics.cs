@@ -6,16 +6,16 @@ public class PlayerPhysics : MonoBehaviour
 {
     // Grounded check variables
     private float m_gcRadius = 0.3f;       // Grounndeed check shpere radius
-    [SerializeField] private float m_groundDrag = 5f;
-    [SerializeField] private float m_airDrag = 0f;
-    [SerializeField] [Range(0f, 90f)] private float m_maxGroundAngle = 45f;
+    private float m_groundDrag = 5f;
+    private float m_airDrag = 0f;
+    // [SerializeField] [Range(0f, 90f)] private float m_maxGroundAngle = 45f;
     
     // Gravity & Dynamic friction member variables
     private float m_playerWeight;
     private float m_gravity = 9.81f * 2.5f;
     private float m_dfCoef = 0.4f;          // Dynamic friction coefficient
-    [SerializeField] private float m_stepUpHeight = 0.4f;       // Player floating height
-    [SerializeField] private float m_stepDownHeight = 0.2f;     // Player step down distance
+    private float m_stepUpHeight = 0.4f;       // Player floating height
+    private float m_stepDownHeight = 0.2f;     // Player step down distance
     
     
     // Start

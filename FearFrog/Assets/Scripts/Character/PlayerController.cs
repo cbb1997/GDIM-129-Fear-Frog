@@ -8,9 +8,9 @@ public class PlayerMovement : MonoBehaviour
 {
     // Movement member variables
     [SerializeField] private float m_walkAcceleration = 30f;
-    [SerializeField] private float m_maxWalkAirVelocity = 1.5f;
+    private float m_maxWalkAirVelocity = 1.2f;
     [SerializeField] private float m_sprintAcceleration = 45f;
-    [SerializeField] private float m_maxSprintAirVelocity = 3.5f;
+    private float m_maxSprintAirVelocity = 6f;
     [SerializeField] private float m_crouchAcceleration = 18f;
     private float m_currMoveAcceleration;
     private float m_currMaxAirVelocity;
@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float m_yOritation = 0;
     
     // Jump member variables
-    [SerializeField] private float m_jumpAcceleration = 250f;
+    [SerializeField] private float m_jumpAcceleration = 320f;
     
     // Crouch height change member variables
     private float m_stepUpHeight = 0.4f;
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         m_yOritation += lookDirection.y * m_cameraSensitivity * Time.deltaTime;
         m_yOritation = Math.Clamp(m_yOritation, -90f, 90f);
         
-        PlayerStatus.Instance.Camera.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
+        PlayerStatus.Instance.CameraContainer.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
         PlayerStatus.Instance.PlayerEntity.rotation = Quaternion.Euler(0f, m_xOritation, 0f);
     }
     
@@ -198,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (PlayerStatus.Instance.IsGrounded) // Only allow toggling when player's grounded
         {
-            if (PlayerStatus.Instance.IsCrounching)      // Stop crouching
+            if (PlayerStatus.Instance.IsCrouching)      // Stop crouching
             {
                 StopCrouching();
             }
@@ -212,9 +212,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartCrouching()   // Start crouching
     {
-        if (!PlayerStatus.Instance.IsCrounching)
+        if (!PlayerStatus.Instance.IsCrouching)
         {
-            PlayerStatus.Instance.IsCrounching = true;
+            PlayerStatus.Instance.IsCrouching = true;
             m_currMoveAcceleration = m_crouchAcceleration;
             // Update player entity and camera
             StartCoroutine(CrounchCameraChange(new Vector3(0f, m_crouchCameraHeight, 0f)));
@@ -227,9 +227,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void StopCrouching()    // Stop crouching
     {
-        if (PlayerStatus.Instance.IsCrounching)
+        if (PlayerStatus.Instance.IsCrouching)
         {
-            PlayerStatus.Instance.IsCrounching = false;
+            PlayerStatus.Instance.IsCrouching = false;
             m_currMoveAcceleration = m_walkAcceleration;
             // Update player entity and camera
             StartCoroutine(CrounchCameraChange(new Vector3(0f, m_standCameraHeight, 0f)));

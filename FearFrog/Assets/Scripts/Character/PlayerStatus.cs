@@ -19,7 +19,7 @@ public class PlayerStatus : MonoBehaviour
     private bool m_isSprinting = false;
     public bool IsSprinting { get { return m_isSprinting; } set { m_isSprinting = value; } }
     private bool m_isCrouching = false;
-    public bool IsCrounching { get { return m_isCrouching; } set { m_isCrouching = value; } }
+    public bool IsCrouching { get { return m_isCrouching; } set { m_isCrouching = value; } }
     private RaycastHit m_groundHit;
     public ref RaycastHit GroundHit { get { return ref m_groundHit; } }
     
