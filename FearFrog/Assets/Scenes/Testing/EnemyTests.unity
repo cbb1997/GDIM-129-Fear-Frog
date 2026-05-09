@@ -309,6 +309,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6359539096779772592, guid: 606f2fefa24b97a49bbcddc312de9bed,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -465,6 +470,7 @@ GameObject:
   - component: {fileID: 2147430744}
   - component: {fileID: 2147430748}
   - component: {fileID: 2147430749}
+  - component: {fileID: 2147430750}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -579,7 +585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c951f92bdac290f41b1a3a710376e35d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  m_EnemyData: {fileID: 0}
+  m_EnemyData: {fileID: 11400000, guid: 4d4e6962ac1fae44c9cdba578e0f0ec8, type: 2}
 --- !u!114 &2147430749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -611,6 +617,28 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 2147430743}
+--- !u!195 &2147430750
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147430743}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
