@@ -11,11 +11,13 @@ public enum EnemyState
 
 public class EnemyController : MonoBehaviour
 {
+    [SerializeField] private EnemyData m_EnemyData;
+
     private EnemyState m_CurrentState;
 
     private void Start()
     {
-        
+        SetCurrentState(EnemyState.Inactive);   
     }
 
     private void Update()
