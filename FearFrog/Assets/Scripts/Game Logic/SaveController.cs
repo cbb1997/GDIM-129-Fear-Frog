@@ -12,6 +12,7 @@ public class SaveController : MonoBehaviour
 
     private void Start()
     {
+        DontDestroyOnLoad(this);
         m_Saves = new List<SaveFile>();
 
         CreateNewSave();
