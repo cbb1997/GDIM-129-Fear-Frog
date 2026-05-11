@@ -8,4 +8,14 @@ public class GameController : MonoBehaviour
 
         Debugger.Log("Engine initialized...");
     }
+
+    private void StartGame()
+    {
+    
+    }
+
+    private void QuitGame()
+    { 
+    
+    }
 }
