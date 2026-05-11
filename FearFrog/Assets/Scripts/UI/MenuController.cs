@@ -1,16 +1,36 @@
 using UnityEngine;
+using System;
 
 public class MenuController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static Action OnStartInitialized;
+    public static Action OnQuitInitialized;
+
+    [SerializeField] private GameObject m_MainMenu;
+
+    private void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
+    }
+
+    public void InitializeStart() 
+    {
+        OnStartInitialized?.Invoke();
+        DisableMainMenu();
+    }
+
+    public void InitializeQuit()
+    { 
+        OnQuitInitialized?.Invoke();
+    }
+
+    private void DisableMainMenu() 
+    {
+        m_MainMenu.SetActive(false);
     }
 }

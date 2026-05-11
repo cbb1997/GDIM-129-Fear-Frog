@@ -539,7 +539,7 @@ GameObject:
   m_Component:
   - component: {fileID: 244757194}
   m_Layer: 0
-  m_Name: Environment
+  m_Name: Zone_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1114,7 +1114,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1472934135}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2036538466}
+        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
+        m_MethodName: InitializeStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1472934135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1235,7 +1247,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1615821218}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2036538466}
+        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
+        m_MethodName: InitializeQuit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1615821218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1619,6 +1643,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aacca5ae8608494fa5c259b8fabd03d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
+  m_GameData: {fileID: 11400000, guid: da56c68ec97899642bd8f78564f250ea, type: 2}
+  m_Player: {fileID: 1969972492}
+  m_StartingLevel: {fileID: 244757193}
 --- !u!1 &1860001212
 GameObject:
   m_ObjectHideFlags: 0
@@ -1794,6 +1821,12 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1 &1969972492 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4043726030836972691, guid: af93481d65cf3d04d8ffbea131def5da,
+    type: 3}
+  m_PrefabInstance: {fileID: 6482416759756731765}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2018108339 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4741598513036020979, guid: 4aa645da3cbc72b4dbfb5c2b43393d96,
@@ -1844,6 +1877,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 746fb8d802264d44db6b1de6cfa58dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuController
+  m_MainMenu: {fileID: 1387556590}
 --- !u!1 &2108041542
 GameObject:
   m_ObjectHideFlags: 0

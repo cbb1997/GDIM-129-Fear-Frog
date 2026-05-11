@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb4eeaf895a30e4790d04baa207dc15, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: Assembly-CSharp::GameData
+  m_DataClass:
+    m_Player: {fileID: 0}
+    m_StartingLevel: {fileID: 0}
+    m_CurrentLevel: {fileID: 0}
