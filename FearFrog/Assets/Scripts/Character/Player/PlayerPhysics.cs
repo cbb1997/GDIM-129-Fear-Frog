@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Unity.Collections;
 using UnityEditor.Rendering.Universal;
 using UnityEngine;
 
@@ -66,6 +68,7 @@ public class PlayerPhysics : MonoBehaviour
         PlayerStatus.Instance.IsGroundedPrev = PlayerStatus.Instance.IsGrounded;
         
         // Ground check
+        RaycastHit[] hitArr;
         if (PlayerStatus.Instance.IsJumping)
         {
             // Prevent failing to jump up
@@ -74,9 +77,23 @@ public class PlayerPhysics : MonoBehaviour
         else
         {
             float gcHeightAdjust = (PlayerStatus.Instance.IsGroundedPrev) ? m_stepDownHeight : 0f;
-            PlayerStatus.Instance.IsGrounded = Physics.SphereCast(transform.position, m_gcRadius, 
-                Vector3.down, out PlayerStatus.Instance.GroundHit, 
-                -PlayerStatus.Instance.FootPos.localPosition.y + gcHeightAdjust);
+            int mask = LayerMask.NameToLayer("Player");     // Exclude player layer from checking
+            mask = ~(1 << mask);
+            hitArr = Physics.SphereCastAll(transform.position, m_gcRadius, Vector3.down, 
+                -PlayerStatus.Instance.FootPos.localPosition.y + gcHeightAdjust, mask);
+            hitArr = hitArr.OrderBy(x => x.distance).ToArray();
+            
+            PlayerStatus.Instance.IsGrounded = false;   // Set player grounded to false by default for the case no ground is found
+            for (int i = 0; i < hitArr.Length; i++)
+            {
+                // Check ground besides isTrigger objects
+                if (!hitArr[i].collider.isTrigger)
+                {
+                    PlayerStatus.Instance.GroundHit = hitArr[i];
+                    PlayerStatus.Instance.IsGrounded = true;
+                    break;
+                }
+            }
         }
         
         // Update status
