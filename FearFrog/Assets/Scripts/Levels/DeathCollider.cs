@@ -2,15 +2,27 @@ using UnityEngine;
 
 public class DeathCollider : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other) 
     {
-        
+        //Debugger.Log(other.tag);
+
+        switch (other.tag)
+        {
+            case "Player":
+                //PlayerController player = other.GetComponent<PlayerController>();
+                //player.Kill();
+                break;
+            case "Enemy":
+                other.GetComponent<EnemyController>().Respawn();
+                break;
+            default:
+                Destroy(other.gameObject);
+                break;
+        }
     }
 }

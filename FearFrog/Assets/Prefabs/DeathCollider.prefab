@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4741598513036020979}
   - component: {fileID: 1192480960188720606}
   - component: {fileID: 3225403115072274868}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DeathCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
