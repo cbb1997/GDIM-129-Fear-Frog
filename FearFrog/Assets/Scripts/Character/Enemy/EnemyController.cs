@@ -56,4 +56,7 @@ public class EnemyController : MonoBehaviour
     private void AlertBehavior() { }
     private void AggressiveBehavior() { }
     private void AttackBehavior() { }
+
+    public void Respawn() { }
+    public void Kill() { }
 }
