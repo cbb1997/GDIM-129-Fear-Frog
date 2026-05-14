@@ -1,13 +1,34 @@
 using UnityEngine;
+using UnityEditor;
+using System;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private VisualDictionary<string, int> m_Dict;
+    [SerializeField] private GameData m_GameData;
+    
+    [SerializeField] private GameObject m_Player;
+    [SerializeField] private GameObject m_StartingLevel;
 
     private void Start()
     {
-        Debugger.Log("Engine initialized...");
+        DontDestroyOnLoad(this);
 
-        m_Dict = new VisualDictionary<string, int>(5);
+        MenuController.OnStartInitialized += StartGame;
+        MenuController.OnQuitInitialized += QuitGame;
+    }
+
+    private void StartGame()
+    {
+        m_StartingLevel.SetActive(true);
+        m_Player.SetActive(true);
+    }
+
+    private void QuitGame()
+    {
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false; 
+        return;
+#endif
+        Application.Quit();
     }
 }

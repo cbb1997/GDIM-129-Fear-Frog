@@ -11,11 +11,13 @@ public enum EnemyState
 
 public class EnemyController : MonoBehaviour
 {
+    [SerializeField] private EnemyData m_EnemyData;
+
     private EnemyState m_CurrentState;
 
     private void Start()
     {
-        
+        SetCurrentState(EnemyState.Inactive);   
     }
 
     private void Update()
@@ -54,4 +56,7 @@ public class EnemyController : MonoBehaviour
     private void AlertBehavior() { }
     private void AggressiveBehavior() { }
     private void AttackBehavior() { }
+
+    public void Respawn() { }
+    public void Kill() { }
 }

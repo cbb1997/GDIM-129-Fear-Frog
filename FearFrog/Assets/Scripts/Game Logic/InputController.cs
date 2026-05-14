@@ -2,14 +2,13 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    // Member Variables
+    // Member variables
     private static InputController m_instance;
-    public static InputController Instance { get { return m_instance; } }
+    public static InputController Instance { get{ return m_instance; } }
 
     private PlayerInput m_input;
     public PlayerInput Input { get { return m_input; } }
-    
-    
+
     // Awake
     void Awake()
     {

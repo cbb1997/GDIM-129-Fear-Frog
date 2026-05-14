@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public class SaveController : MonoBehaviour
 {
-    private const string m_SaveName = "save_";
+    private const string SAVE_FILE_NAME = "save_";
+    private const string SAVE_FOLDER_NAME = "saves";
 
     private SaveFile m_CurrentSaveFile;
     private List<SaveFile> m_Saves;
@@ -12,9 +13,16 @@ public class SaveController : MonoBehaviour
 
     private void Start()
     {
-        m_Saves = new List<SaveFile>();
+        DontDestroyOnLoad(this);
+        Debugger.Log((string)Application.persistentDataPath);
 
-        CreateNewSave();
+        LoadSaveFiles();
+        if (m_Saves == null) CreateNewSave();
+    }
+
+    private void LoadSaveFiles()
+    {
+        m_Saves = new List<SaveFile>(SaveFile.LoadSaves(SAVE_FOLDER_NAME));
     }
 
     private void SelectSave(SaveFile saveFile)
@@ -24,7 +32,7 @@ public class SaveController : MonoBehaviour
 
     private void CreateNewSave()
     {
-        SaveFile newSave = new SaveFile(m_SaveName + m_Saves.Count + 1);
+        SaveFile newSave = new SaveFile(SAVE_FOLDER_NAME, SAVE_FILE_NAME + m_Saves.Count + 1);
         m_Saves.Add(newSave);
         newSave.Save(m_SaveBuilder.BuildSave());
     }
