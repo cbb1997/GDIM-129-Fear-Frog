@@ -4,6 +4,10 @@ using System;
 [System.Serializable]
 public class PlayerDataClass : CharacterDataClass
 {
+    // Player respawn
+    [SerializeField] private Vector3 m_respawnPos;
+    public Vector3 RespawnPos { get { return m_respawnPos; } set { m_respawnPos = value; } }
+
     // Player movement
     [SerializeField] private float m_walkAcceleration = 30f;
     public float WalkAcceleration { get { return m_walkAcceleration; } }

@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     
     // Player respawn
     private Vector3 m_respawnPos;   // Ground point
-    public Vector3 RespawnPos {set { m_respawnPos = value; }}
+    public Vector3 RespawnPos { set { m_respawnPos = value; } }
     
     // Player status
     private bool m_isGrounded = true;
