@@ -8,6 +8,10 @@ public class PlayerController : MonoBehaviour
     private static PlayerController m_instance;
     public static PlayerController Instance { get { return m_instance; } }
     
+    // Player respawn
+    private Vector3 m_respawnPos;   // Ground point
+    public Vector3 RespawnPos {set { m_respawnPos = value; }}
+    
     // Player status
     private bool m_isGrounded = true;
     public bool IsGrounded { get { return m_isGrounded; } set { m_isGrounded = value; } }
@@ -54,5 +58,14 @@ public class PlayerController : MonoBehaviour
     {
         // Initialization
         m_playerRb = this.GetComponent<Rigidbody>();
+    }
+    
+    // Player respawn
+    public void Respawn()
+    {
+        Vector3 pos = m_respawnPos;
+        pos.y += 0.5f;
+        
+        transform.position = pos;
     }
 }
