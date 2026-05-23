@@ -19,7 +19,7 @@ public class PlayerInteract : MonoBehaviour
     private void Update()
     {
         // Check for interactable objects
-        Ray ray = PlayerStatus.Instance.Camera.GetComponent<Camera>().ScreenPointToRay(m_screenCenter);
+        Ray ray = PlayerController.Instance.Camera.GetComponent<Camera>().ScreenPointToRay(m_screenCenter);
         if (Physics.Raycast(ray, out RaycastHit hit, m_maxDistance))
         {
             IInteractable interactableObj = hit.collider.GetComponent<IInteractable>();
