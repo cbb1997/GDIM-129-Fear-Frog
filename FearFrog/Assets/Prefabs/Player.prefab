@@ -14,13 +14,14 @@ GameObject:
   - component: {fileID: 6301190206590033531}
   - component: {fileID: 8214335943337012332}
   - component: {fileID: 2737082425831246068}
+  - component: {fileID: 2236018413321641235}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7875313861133947386
 Transform:
   m_ObjectHideFlags: 0
@@ -125,6 +126,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCameraBob
   m_bobEnabled: 1
+--- !u!114 &2236018413321641235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4043726030836972691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e86fae7c46e2bb941b2539422bd706c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
+  m_maxDistance: 1.2
 --- !u!1 &4742107555712661466
 GameObject:
   m_ObjectHideFlags: 0
