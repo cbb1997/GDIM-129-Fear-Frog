@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public enum EnemyState 
 { 
@@ -13,8 +14,6 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private EnemyData m_EnemyData;
     [SerializeField] private Animator m_Animator;
-
-    private const int AGGRO_THRESHOLD = 10;
 
     private EnemyState m_CurrentState;
 
@@ -42,7 +41,7 @@ public class EnemyController : MonoBehaviour
 
         int playerMeter = DetectPlayer();
 
-        if (playerMeter > AGGRO_THRESHOLD)
+        if (playerMeter > m_EnemyData.DataClass.AggroThreshold)
         {
             SetCurrentState(EnemyState.Aggressive);
         }
@@ -92,10 +91,19 @@ public class EnemyController : MonoBehaviour
         SetAnimState();
     }
 
+    private void AggressiveBehavior() 
+    {
+        StartCoroutine(EngageAggro());
+    }
+
+    private IEnumerator EngageAggro()
+    {
+        yield return new WaitForSeconds(m_EnemyData.DataClass.AggroTime);
+    }
+
     private void InactiveBehavior() { }
     private void IdleBehavior() { }
     private void AlertBehavior() { }
-    private void AggressiveBehavior() { }
     private void AttackBehavior() { }
 
     private void SetAnimState() {
