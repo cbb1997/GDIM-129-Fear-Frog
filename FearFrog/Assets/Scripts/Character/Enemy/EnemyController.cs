@@ -12,6 +12,7 @@ public enum EnemyState
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] private EnemyData m_EnemyData;
+    [SerializeField] private Animator m_Animator;
 
     private EnemyState m_CurrentState;
 
