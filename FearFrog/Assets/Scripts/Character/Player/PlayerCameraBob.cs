@@ -14,6 +14,8 @@ public class PlayerCameraBob : MonoBehaviour
     private float m_toggleSpeed = 0.3f;     // Speed threshold for whether apply bob effect
     private Vector3 m_startPos;
     private float timer = 0f;
+
+    public AnimationCurve m_curve;
     
     
     // Start
@@ -65,8 +67,9 @@ public class PlayerCameraBob : MonoBehaviour
         // Calculate and perform bob offset
         timer += Time.deltaTime;
         Vector3 offset = new Vector3();
-        offset.x = (0.6f * m_amplitude * magModifier) * Mathf.Cos((frequency / 2f) * timer);
-        offset.y = (-1.2f * m_amplitude * magModifier) * Mathf.Sin(frequency * timer);
+        offset.x = (0.5f * m_amplitude * magModifier) * Mathf.Cos((frequency / 2f) * timer);
+        offset.y = (-1.2f * m_amplitude * magModifier) * 0.25f *
+                   (3 * Mathf.Sin(frequency * timer) * Mathf.Pow(1f - Mathf.Cos(frequency * timer), 2));
         
         PlayerController.Instance.Camera.localPosition += offset;
     }
