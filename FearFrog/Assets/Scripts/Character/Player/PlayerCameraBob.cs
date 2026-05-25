@@ -16,7 +16,7 @@ public class PlayerCameraBob : MonoBehaviour
     private float m_toggleSpeed = 0.3f;     // Speed threshold for whether apply bob effect
     
     private Vector3 m_startPos;
-    private float timer = 0f;
+    private float m_timer = 0f;
     
     // Start
     void Start()
@@ -54,11 +54,11 @@ public class PlayerCameraBob : MonoBehaviour
     private void PerformBob()
     {
         // Calculate and perform bob offset
-        timer += Time.deltaTime;
+        m_timer += Time.deltaTime;
         Vector3 offset = new Vector3();
-        offset.x = (0.5f * 100f * m_amplitude * m_currMagModifier) * Mathf.Cos((m_currFrequency / 2f) * timer);
-        offset.y = (-1.2f * 100f * m_amplitude * m_currMagModifier) * 0.25f *
-                   (3 * Mathf.Sin(m_currFrequency * timer) * Mathf.Pow(1f - Mathf.Cos(m_currFrequency * timer), 2));
+        offset.x = (0.5f * m_amplitude * m_currMagModifier) * Mathf.Cos((m_currFrequency / 2f) * m_timer);
+        offset.y = (-1.2f * m_amplitude * m_currMagModifier) * 0.25f *
+                   (3 * Mathf.Sin(m_currFrequency * m_timer) * Mathf.Pow(1f - Mathf.Cos(m_currFrequency * m_timer), 2));
         
         PlayerController.Instance.Camera.localPosition += offset;
     }
@@ -99,13 +99,14 @@ public class PlayerCameraBob : MonoBehaviour
         if (horiVelocity.magnitude >= m_toggleSpeed)
         {
             PlayerController.Instance.Camera.localPosition = m_startPos;
+            m_timer = 0f;
         }
     }
 
     // Stop bob motion and move camera back to start position
     private void StopBob()
     {
-        timer = 0f;
+        m_timer = 0f;
         if (PlayerController.Instance.Camera.localPosition == m_startPos) return;
         PlayerController.Instance.Camera.localPosition = Vector3.Lerp(PlayerController.Instance.Camera.localPosition, m_startPos, 7f * Time.deltaTime);
     }
