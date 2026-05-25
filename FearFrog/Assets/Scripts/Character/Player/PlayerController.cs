@@ -8,6 +8,15 @@ public class PlayerController : MonoBehaviour
     private static PlayerController m_instance;
     public static PlayerController Instance { get { return m_instance; } }
     
+    // Player events
+    public delegate void MovementChange();
+    public event MovementChange OnStartSprinting;
+    public void TriggerOnStartSprinting() { OnStartSprinting?.Invoke(); }
+    public event MovementChange OnStartCrouching;
+    public void TriggerOnStartCrouching() { OnStartCrouching?.Invoke(); }
+    public event MovementChange OnBackToWalking;
+    public void TriggerOnBackToWalking() { OnBackToWalking?.Invoke(); }
+    
     // Player respawn
     private Vector3 m_respawnPos;   // Ground point
     public Vector3 RespawnPos { set { m_respawnPos = value; } }

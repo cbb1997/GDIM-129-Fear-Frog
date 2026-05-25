@@ -170,6 +170,8 @@ public class PlayerMovement : MonoBehaviour
             PlayerController.Instance.IsSprinting = true;
             m_currMoveAcceleration = m_sprintAcceleration;
             m_currMaxAirVelocity = m_maxSprintAirVelocity;
+            // Invoke event
+            PlayerController.Instance.TriggerOnStartSprinting();
         }
     }
 
@@ -179,7 +181,9 @@ public class PlayerMovement : MonoBehaviour
         {
             PlayerController.Instance.IsSprinting = false;
             m_currMoveAcceleration = m_walkAcceleration;
-            m_currMaxAirVelocity = m_maxWalkAirVelocity;   
+            m_currMaxAirVelocity = m_maxWalkAirVelocity;
+            // Invoke event
+            PlayerController.Instance.TriggerOnBackToWalking();
         }
     }
     
@@ -189,6 +193,8 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerController.Instance.IsSprinting && PlayerController.Instance.PlayerRb.linearVelocity.magnitude < 0.0001f)
         {
             StopSprinting();
+            // Invoke event
+            PlayerController.Instance.TriggerOnBackToWalking();
         }
     }
     
@@ -222,6 +228,9 @@ public class PlayerMovement : MonoBehaviour
             float localPosY = m_stepUpHeight + localScaleY - 1f;
             PlayerController.Instance.PlayerEntity.localScale = new Vector3(1f, localScaleY, 1f);
             PlayerController.Instance.PlayerEntity.localPosition = new Vector3(0f, localPosY, 0f);
+            
+            // Fire event
+            PlayerController.Instance.TriggerOnStartCrouching();
         }
     }
 
@@ -235,6 +244,9 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(CrounchCameraChange(new Vector3(0f, m_standCameraHeight, 0f)));
             PlayerController.Instance.PlayerEntity.localScale = new Vector3(1f, 1f - m_stepUpHeight / 2f, 1f);
             PlayerController.Instance.PlayerEntity.localPosition = new Vector3(0f, m_stepUpHeight / 2f, 0f);
+            
+            // Fire event
+            PlayerController.Instance.TriggerOnBackToWalking();
         }
     }
 
