@@ -18,12 +18,32 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
-        //SetCurrentState(EnemyState.Idle);
+        GameController.OnGameStateChanged += GameStateListener;
     }
 
     private void Update()
     {
+        if (m_CurrentState == EnemyState.Inactive) return;
+    }
 
+    private bool DetectPlayer() 
+    {
+        return false;
+    }
+
+    #region State Machine
+
+    private void GameStateListener(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.Active:
+                SetCurrentState(EnemyState.Idle);
+                break;
+            default:
+                SetCurrentState(EnemyState.Inactive);
+                break;
+        }
     }
 
     private void SetCurrentState(EnemyState state)
@@ -62,6 +82,7 @@ public class EnemyController : MonoBehaviour
     private void SetAnimState() {
         m_Animator.SetInteger("AnimState", (int) m_CurrentState);
     }
+    #endregion
 
     public void Respawn() { }
     public void Kill() { }
