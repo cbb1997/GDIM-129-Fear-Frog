@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: EnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   m_DataClass:
-    m_Health: 0
+    m_Health: 30
     m_Location: {x: 0, y: 0, z: 0}
+    m_DefaultLocation: {x: 0, y: 0, z: 0}
     m_AggroThreshold: 10
     m_AggroTime: 25

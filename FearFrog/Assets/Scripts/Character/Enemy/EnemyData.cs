@@ -3,8 +3,12 @@ using UnityEngine;
 [System.Serializable]
 public class EnemyDataClass : CharacterDataClass
 {
-    [SerializeField] private Vector3 m_Location;
-    public Vector3 Location { get { return m_Location; } set { m_Location = value; } }
+    [SerializeField] private Vector3 m_Position;
+    public Vector3 Position { get { return m_Position; } set { m_Position = value; } }
+    
+    [SerializeField] private Vector3 m_RespawnPos;
+    public Vector3 RespawnPos { get { return m_RespawnPos; } }
+
 
     [SerializeField] private int m_AggroThreshold;
     public int AggroThreshold { get { return m_AggroThreshold; } }

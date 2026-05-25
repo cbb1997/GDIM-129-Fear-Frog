@@ -33,6 +33,11 @@ public class EnemyController : MonoBehaviour
         return 0;
     }
 
+    private void UpdateLocation()
+    {
+        m_EnemyData.DataClass.Position = GetComponent<Transform>().position;
+    }
+
     #region State Machine
 
     private void UpdateCurrentState()
