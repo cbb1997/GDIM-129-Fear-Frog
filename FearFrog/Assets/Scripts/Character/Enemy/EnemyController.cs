@@ -2,11 +2,11 @@ using UnityEngine;
 
 public enum EnemyState 
 { 
-    Inactive,
-    Idle,
-    Alert,
-    Aggressive,
-    Attacking
+    Inactive = 0,
+    Idle = 1,
+    Alert = 2,
+    Aggressive = 3,
+    Attacking = 4,
 }
 
 public class EnemyController : MonoBehaviour
@@ -18,12 +18,12 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
-        SetCurrentState(EnemyState.Inactive);   
+        //SetCurrentState(EnemyState.Idle);
     }
 
     private void Update()
     {
-        
+
     }
 
     private void SetCurrentState(EnemyState state)
@@ -50,6 +50,7 @@ public class EnemyController : MonoBehaviour
         }
 
         m_CurrentState = state;
+        SetAnimState();
     }
 
     private void InactiveBehavior() { }
@@ -57,6 +58,10 @@ public class EnemyController : MonoBehaviour
     private void AlertBehavior() { }
     private void AggressiveBehavior() { }
     private void AttackBehavior() { }
+
+    private void SetAnimState() {
+        m_Animator.SetInteger("AnimState", (int) m_CurrentState);
+    }
 
     public void Respawn() { }
     public void Kill() { }
