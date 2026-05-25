@@ -4,6 +4,8 @@ public class PlayerCameraBob : MonoBehaviour
 {
     // Member variables
     [SerializeField] private bool m_bobEnabled = true;
+    private float m_currFrequency;
+    private float m_currMagModifier;
     private float m_walkFrequency = 8f;        // Bob effect frequency
     private float m_sprintFrequency = 16f;
     private float m_crouchFrequency = 5f;
@@ -12,17 +14,22 @@ public class PlayerCameraBob : MonoBehaviour
     private float m_crouchMagModifier = 0.25f;
     private float m_amplitude = 0.001f;
     private float m_toggleSpeed = 0.3f;     // Speed threshold for whether apply bob effect
+    
     private Vector3 m_startPos;
     private float timer = 0f;
-
-    public AnimationCurve m_curve;
-    
     
     // Start
     void Start()
     {
         // Varialbe initialization
         m_startPos = PlayerController.Instance.Camera.localPosition;
+        m_currFrequency = m_walkFrequency;
+        m_currMagModifier = m_walkMagModifier;
+        
+        // Link events
+        PlayerController.Instance.OnStartSprinting += SetSprintBob;
+        PlayerController.Instance.OnStartCrouching += SetCrouchBob;
+        PlayerController.Instance.OnBackToWalking += SetWalkBob;
     }
 
     // Update
@@ -46,32 +53,53 @@ public class PlayerCameraBob : MonoBehaviour
     // Play bob motion on the camera
     private void PerformBob()
     {
-        // Check which frequency and magnitude modifier to use
-        float frequency, magModifier;
-        if (PlayerController.Instance.IsSprinting)
-        {
-            frequency = m_sprintFrequency;
-            magModifier = m_sprintMagModifier;
-        }
-        else if (PlayerController.Instance.IsCrouching)
-        {
-            frequency = m_crouchFrequency;
-            magModifier = m_crouchMagModifier;
-        }
-        else
-        {
-            frequency = m_walkFrequency;
-            magModifier = m_walkMagModifier;
-        }
-        
         // Calculate and perform bob offset
         timer += Time.deltaTime;
         Vector3 offset = new Vector3();
-        offset.x = (0.5f * m_amplitude * magModifier) * Mathf.Cos((frequency / 2f) * timer);
-        offset.y = (-1.2f * m_amplitude * magModifier) * 0.25f *
-                   (3 * Mathf.Sin(frequency * timer) * Mathf.Pow(1f - Mathf.Cos(frequency * timer), 2));
+        offset.x = (0.5f * 100f * m_amplitude * m_currMagModifier) * Mathf.Cos((m_currFrequency / 2f) * timer);
+        offset.y = (-1.2f * 100f * m_amplitude * m_currMagModifier) * 0.25f *
+                   (3 * Mathf.Sin(m_currFrequency * timer) * Mathf.Pow(1f - Mathf.Cos(m_currFrequency * timer), 2));
         
         PlayerController.Instance.Camera.localPosition += offset;
+    }
+    
+    // Change back to walking bob settings
+    private void SetWalkBob()
+    {
+        // Update setting
+        m_currFrequency = m_walkFrequency;
+        m_currMagModifier = m_walkMagModifier;
+        ResetCamera();
+    }
+
+    // Change to sprinting bob settings
+    private void SetSprintBob()
+    {
+        // Update setting
+        m_currFrequency = m_sprintFrequency;
+        m_currMagModifier = m_sprintMagModifier;
+        ResetCamera();
+    }
+    
+    // Change to crouching bob settings
+    private void SetCrouchBob()
+    {
+        // Update setting
+        m_currFrequency = m_crouchFrequency;
+        m_currMagModifier = m_crouchMagModifier;
+        ResetCamera();
+    }
+
+    // Check to reset camera location back to start position
+    // on player movement state change
+    private void ResetCamera()
+    {
+        Vector3 horiVelocity = PlayerController.Instance.PlayerRb.linearVelocity;
+        horiVelocity.y = 0f;
+        if (horiVelocity.magnitude >= m_toggleSpeed)
+        {
+            PlayerController.Instance.Camera.localPosition = m_startPos;
+        }
     }
 
     // Stop bob motion and move camera back to start position
