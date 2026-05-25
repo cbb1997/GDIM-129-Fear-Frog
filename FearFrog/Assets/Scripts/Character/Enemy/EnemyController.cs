@@ -14,6 +14,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private EnemyData m_EnemyData;
     [SerializeField] private Animator m_Animator;
 
+    private const int AGGRO_THRESHOLD = 10;
+
     private EnemyState m_CurrentState;
 
     private void Start()
@@ -23,15 +25,32 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        if (m_CurrentState == EnemyState.Inactive) return;
+        UpdateCurrentState();
     }
 
-    private bool DetectPlayer() 
+    // Returns at integer value indicating an "aggro meter"
+    private int DetectPlayer() 
     {
-        return false;
+        return 0;
     }
 
     #region State Machine
+
+    private void UpdateCurrentState()
+    {
+        if (m_CurrentState == EnemyState.Inactive) return;
+
+        int playerMeter = DetectPlayer();
+
+        if (playerMeter > AGGRO_THRESHOLD)
+        {
+            SetCurrentState(EnemyState.Aggressive);
+        }
+        else if (playerMeter > 0)
+        {
+            SetCurrentState(EnemyState.Alert);
+        }
+    }
 
     private void GameStateListener(GameState state)
     {
