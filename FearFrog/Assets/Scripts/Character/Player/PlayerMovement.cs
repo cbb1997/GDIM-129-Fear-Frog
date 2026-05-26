@@ -43,8 +43,8 @@ public class PlayerMovement : MonoBehaviour
         
         // Link jump, sprint, and crouch functionality
         InputController.Instance.Input.Player.Jump.performed += Jump;
-        InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
-        InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
+        // InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
+        // InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
     }
     
     // Update
@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 lookDirection = InputController.Instance.Input.Player.Look.ReadValue<Vector2>();
         m_xOritation += lookDirection.x * m_cameraSensitivity * Time.deltaTime;
         m_yOritation += lookDirection.y * m_cameraSensitivity * Time.deltaTime;
-        m_yOritation = Math.Clamp(m_yOritation, -90f, 90f);
+        m_yOritation = Math.Clamp(m_yOritation, -78f, 85f);
         
         PlayerController.Instance.CameraContainer.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
         PlayerController.Instance.PlayerEntity.rotation = Quaternion.Euler(0f, m_xOritation, 0f);
