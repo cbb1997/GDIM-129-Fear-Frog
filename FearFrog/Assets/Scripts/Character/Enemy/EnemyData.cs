@@ -1,7 +1,21 @@
 using UnityEngine;
 
 [System.Serializable]
-public class EnemyDataClass : CharacterDataClass { }
+public class EnemyDataClass : CharacterDataClass
+{
+    [SerializeField] private Vector3 m_Position;
+    public Vector3 Position { get { return m_Position; } set { m_Position = value; } }
+    
+    [SerializeField] private Vector3 m_RespawnPos;
+    public Vector3 RespawnPos { get { return m_RespawnPos; } }
+
+
+    [SerializeField] private int m_AggroThreshold;
+    public int AggroThreshold { get { return m_AggroThreshold; } }
+
+    [SerializeField] private float m_AggroTime;
+    public float AggroTime { get { return m_AggroTime; } }
+}
 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptable Objects/EnemyData")]
 public class EnemyData : ScriptableObject
