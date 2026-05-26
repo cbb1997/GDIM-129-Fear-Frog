@@ -28,7 +28,8 @@ public class PlayerBob : MonoBehaviour
     void Start()
     {
         // Varialbe initialization
-        m_startPos = PlayerController.Instance.Camera.localPosition;
+        m_startPos = m_bobObj.localPosition;
+        Debug.Log(m_startPos);
         m_currFrequency = m_walkFrequency;
         m_currMagModifier = m_walkMagModifier;
         
@@ -113,7 +114,7 @@ public class PlayerBob : MonoBehaviour
     private void StopBob()
     {
         m_timer = 0f;
-        if (PlayerController.Instance.Camera.localPosition == m_startPos) return;
-        PlayerController.Instance.Camera.localPosition = Vector3.Lerp(PlayerController.Instance.Camera.localPosition, m_startPos, 7f * Time.deltaTime);
+        if (m_bobObj.localPosition == m_startPos) return;
+        m_bobObj.localPosition = Vector3.Lerp(m_bobObj.localPosition, m_startPos, 7f * Time.deltaTime);
     }
 }

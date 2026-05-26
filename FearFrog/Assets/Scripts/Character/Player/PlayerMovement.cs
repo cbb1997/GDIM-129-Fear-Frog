@@ -24,8 +24,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float m_jumpAcceleration = 320f;
     
     // Crouch height change member variables
-    private float m_stepUpHeight = 0.4f;
-    private float m_standCameraHeight = 0.85f;
+    private float m_stepUpHeight = 0.8f;
+    private float m_standCameraHeight = 1.75f;
     private float m_crouchCameraHeight = 0.05f;
     private float m_crouchShrinkRatio = 0.4f;
     
