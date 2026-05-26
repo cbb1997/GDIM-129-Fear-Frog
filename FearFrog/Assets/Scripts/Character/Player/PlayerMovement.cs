@@ -43,8 +43,8 @@ public class PlayerMovement : MonoBehaviour
         
         // Link jump, sprint, and crouch functionality
         InputController.Instance.Input.Player.Jump.performed += Jump;
-        // InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
-        // InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
+        InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
+        InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
     }
     
     // Update
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
         m_yOritation = Math.Clamp(m_yOritation, -78f, 85f);
         
         PlayerController.Instance.CameraContainer.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
-        PlayerController.Instance.PlayerEntity.rotation = Quaternion.Euler(0f, m_xOritation, 0f);
+        PlayerController.Instance.PlayerEntityContainer.rotation = Quaternion.Euler(0f, m_xOritation, 0f);
     }
     
     // Handle player movement
@@ -229,7 +229,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerController.Instance.PlayerEntity.localScale = new Vector3(1f, localScaleY, 1f);
             PlayerController.Instance.PlayerEntity.localPosition = new Vector3(0f, localPosY, 0f);
             
-            // Fire event
+            // Invoke event
             PlayerController.Instance.TriggerOnStartCrouching();
         }
     }
@@ -245,7 +245,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerController.Instance.PlayerEntity.localScale = new Vector3(1f, 1f - m_stepUpHeight / 2f, 1f);
             PlayerController.Instance.PlayerEntity.localPosition = new Vector3(0f, m_stepUpHeight / 2f, 0f);
             
-            // Fire event
+            // Invoke event
             PlayerController.Instance.TriggerOnBackToWalking();
         }
     }
@@ -256,7 +256,7 @@ public class PlayerMovement : MonoBehaviour
         while (Vector3.Distance(PlayerController.Instance.CameraContainer.localPosition, targetPos) > 0.01f)
         {
             PlayerController.Instance.CameraContainer.localPosition =
-                Vector3.Lerp(PlayerController.Instance.CameraContainer.localPosition, targetPos, 0.25f);
+                Vector3.Lerp(PlayerController.Instance.CameraContainer.localPosition, targetPos, 0.12f);
             yield return null;
         }
     }

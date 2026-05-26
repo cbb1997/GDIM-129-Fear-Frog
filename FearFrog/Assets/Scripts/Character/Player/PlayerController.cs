@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
     public ref RaycastHit GroundHit { get { return ref m_groundHit; } }
     
     // Reference to other player gameObjects/components
+    [SerializeField] private Transform m_playerEntityContainer;
+    public Transform PlayerEntityContainer { get { return m_playerEntityContainer; } }
     [SerializeField] private Transform m_playerEntity;
     public Transform PlayerEntity { get { return m_playerEntity; } }
     [SerializeField] private Transform m_cameraContainer;
