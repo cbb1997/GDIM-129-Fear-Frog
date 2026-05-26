@@ -13,7 +13,10 @@ public class InventoryData : ScriptableObject
 
         for (int i = 0; i < m_Items.Length; i++)
         {
-            dataClasses[i] = m_Items[i].DataClass;   
+            if (dataClasses[i] != null)
+            {
+                dataClasses[i] = m_Items[i].DataClass;
+            }
         }
 
         return dataClasses;
@@ -33,4 +36,5 @@ public class InventoryData : ScriptableObject
 
         return false;
     }
+
 }
