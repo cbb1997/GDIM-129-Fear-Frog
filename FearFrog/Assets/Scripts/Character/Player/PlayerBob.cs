@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class PlayerCameraBob : MonoBehaviour
+public class PlayerBob : MonoBehaviour
 {
-    // Member variables
-    [SerializeField] private bool m_bobEnabled = true;
+    // Statistic member variables
+    [SerializeField] protected bool m_bobEnabled = true;
     private float m_currFrequency;
     private float m_currMagModifier;
     private float m_walkFrequency = 8f;        // Bob effect frequency
@@ -17,6 +17,12 @@ public class PlayerCameraBob : MonoBehaviour
     
     private Vector3 m_startPos;
     private float m_timer = 0f;
+    
+    // Inheritance member variables
+    [SerializeField] protected Transform m_bobObj;
+    [SerializeField] protected float m_xMagnitude;
+    [SerializeField] protected float m_yMagnitude;
+    
     
     // Start
     void Start()
@@ -56,11 +62,11 @@ public class PlayerCameraBob : MonoBehaviour
         // Calculate and perform bob offset
         m_timer += Time.deltaTime;
         Vector3 offset = new Vector3();
-        offset.x = (0.5f * m_amplitude * m_currMagModifier) * Mathf.Cos((m_currFrequency / 2f) * m_timer);
-        offset.y = (-1.2f * m_amplitude * m_currMagModifier) * 0.25f *
+        offset.x = (m_xMagnitude * m_amplitude * m_currMagModifier) * Mathf.Cos((m_currFrequency / 2f) * m_timer);
+        offset.y = (-m_yMagnitude * m_amplitude * m_currMagModifier) * 0.25f *
                    (3 * Mathf.Sin(m_currFrequency * m_timer) * Mathf.Pow(1f - Mathf.Cos(m_currFrequency * m_timer), 2));
         
-        PlayerController.Instance.Camera.localPosition += offset;
+        m_bobObj.localPosition += offset;
     }
     
     // Change back to walking bob settings
