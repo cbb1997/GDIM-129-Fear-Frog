@@ -7,13 +7,16 @@ public class InventoryData : ScriptableObject
     [SerializeField] private ItemData[] m_Items;
     public ItemData[] Items { get { return m_Items; } }
 
+    public static event Action OnAddItem;
+
     public ItemDataClass[] GetItemDataClasses()
     {
         ItemDataClass[] dataClasses = new ItemDataClass[m_Items.Length];
+        Debugger.Log(dataClasses.ToString());
 
         for (int i = 0; i < m_Items.Length; i++)
         {
-            if (dataClasses[i] != null)
+            if(m_Items[i] != null)
             {
                 dataClasses[i] = m_Items[i].DataClass;
             }
@@ -30,6 +33,7 @@ public class InventoryData : ScriptableObject
         {
             if (m_Items[i] == null) { 
                 m_Items[i] = item;
+                OnAddItem?.Invoke();
                 return true;
             }
         }
