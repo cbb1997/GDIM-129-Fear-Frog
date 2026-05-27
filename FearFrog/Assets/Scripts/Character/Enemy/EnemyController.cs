@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
 
 public enum EnemyState 
@@ -14,6 +15,8 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private EnemyData m_EnemyData;
     [SerializeField] private Animator m_Animator;
+    [SerializeField] private NavMeshAgent m_Agent;
+    [SerializeField] private GameObject m_Player;
 
     private EnemyState m_CurrentState;
 
@@ -103,6 +106,8 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator EngageAggro()
     {
+        m_Agent.SetDestination(m_Player.transform.position);
+
         yield return new WaitForSeconds(m_EnemyData.DataClass.AggroTime);
     }
 
