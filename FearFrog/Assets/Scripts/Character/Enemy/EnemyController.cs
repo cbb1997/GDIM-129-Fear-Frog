@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private EnemyData m_EnemyData;
     [SerializeField] private Animator m_Animator;
     [SerializeField] private NavMeshAgent m_Agent;
+
     [SerializeField] private GameObject m_Player;
 
     private EnemyState m_CurrentState;
@@ -23,11 +24,12 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         GameController.OnGameStateChanged += GameStateListener;
+        SetCurrentState(EnemyState.Aggressive);
     }
 
     private void Update()
     {
-        UpdateCurrentState();
+        //UpdateCurrentState();
     }
 
     // Returns at integer value indicating an "aggro meter"
@@ -99,6 +101,20 @@ public class EnemyController : MonoBehaviour
         SetAnimState();
     }
 
+    private void InactiveBehavior() { }
+
+    private void IdleBehavior() { }
+
+    private void AlertBehavior() 
+    {
+        m_Agent.SetDestination(GetPatrolTarget());
+    }
+
+    private Vector3 GetPatrolTarget() 
+    {
+        return Vector3.zero;
+    }
+
     private void AggressiveBehavior() 
     {
         StartCoroutine(EngageAggro());
@@ -111,9 +127,6 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(m_EnemyData.DataClass.AggroTime);
     }
 
-    private void InactiveBehavior() { }
-    private void IdleBehavior() { }
-    private void AlertBehavior() { }
     private void AttackBehavior() { }
 
     private void SetAnimState() {
