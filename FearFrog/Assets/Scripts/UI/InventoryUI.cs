@@ -5,11 +5,12 @@ using static UnityEditor.Timeline.Actions.MenuPriority;
 
 public class InventoryUI : MonoBehaviour
 {
-    public Image[] inventoryBox;
+    public Image[] inventoryIcon;
     public TMP_Text itemName;
     public GameObject inventory;
     [SerializeField] private InventoryData m_InventoryData;
     private ItemDataClass[] dataClass;
+    public InventoryBox[] inventoryBoxes;
 
     private void Start()
     {
@@ -38,7 +39,6 @@ public class InventoryUI : MonoBehaviour
     {
         dataClass = m_InventoryData.GetItemDataClasses();
         DisplayItems(dataClass);
-        Debug.Log(dataClass);
     }
 
     public void DisplayItems(ItemDataClass[] dataClasses)
@@ -47,14 +47,16 @@ public class InventoryUI : MonoBehaviour
         {
             if (dataClasses[i] != null)
             {
-                inventoryBox[i].sprite = dataClasses[i].Icon;
+                inventoryIcon[i].sprite = dataClasses[i].Icon;
+                inventoryBoxes[i].itemDataClass = dataClasses[i];
             }
         }
     }
 
-    public void ShowItemDesc()
+    public void ShowItemDesc(ItemDataClass itemData)
     {
-        //itemName.text = 
+        Debug.Log(itemData.Name);
+        itemName.text = itemData.Name;
     }
 
 }
