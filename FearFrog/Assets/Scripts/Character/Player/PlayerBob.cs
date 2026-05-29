@@ -29,7 +29,6 @@ public class PlayerBob : MonoBehaviour
     {
         // Varialbe initialization
         m_startPos = m_bobObj.localPosition;
-        Debug.Log(m_startPos);
         m_currFrequency = m_walkFrequency;
         m_currMagModifier = m_walkMagModifier;
         
