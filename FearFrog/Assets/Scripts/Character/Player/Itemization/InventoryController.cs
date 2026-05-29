@@ -7,11 +7,12 @@ public class InventoryController : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(this);
+        InventoryItem.OnAcquired += AddItem;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddItem(ItemData item)
     {
-        
+        m_InventoryData.AddItem(item);
     }
+
 }
