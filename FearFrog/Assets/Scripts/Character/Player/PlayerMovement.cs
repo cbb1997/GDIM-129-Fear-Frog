@@ -190,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
     // Exit sprint if player stops moving
     private void SprintStopCheck()
     {
-        if (PlayerController.Instance.IsSprinting && PlayerController.Instance.PlayerRb.linearVelocity.magnitude < 0.0001f)
+        if (PlayerController.Instance.IsSprinting && PlayerController.Instance.PlayerRb.linearVelocity.magnitude < 0.75f)
         {
             StopSprinting();
             // Invoke event

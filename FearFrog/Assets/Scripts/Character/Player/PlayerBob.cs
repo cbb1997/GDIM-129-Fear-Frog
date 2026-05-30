@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerBob : MonoBehaviour
@@ -104,9 +105,24 @@ public class PlayerBob : MonoBehaviour
         horiVelocity.y = 0f;
         if (horiVelocity.magnitude >= m_toggleSpeed)
         {
-            m_bobObj.localPosition = m_startPos;
+            // m_bobObj.localPosition = m_startPos;
+            StartCoroutine(ResetCameraHelper());
             m_timer = 0f;
         }
+    }
+
+    private IEnumerator ResetCameraHelper()
+    {
+        Vector3 currPos = m_bobObj.localPosition;
+        while (Vector3.Distance(currPos, m_startPos) > 0.001f)
+        {
+            Vector3 nextPos = Vector3.Lerp(currPos, m_startPos, 12f * Time.deltaTime);
+            m_bobObj.localPosition += (nextPos - currPos);
+            currPos = nextPos;
+            yield return null;
+        }
+
+        m_bobObj.localPosition += (m_startPos - currPos);
     }
 
     // Stop bob motion and move camera back to start position
