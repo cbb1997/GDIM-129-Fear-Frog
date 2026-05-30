@@ -45,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
         InputController.Instance.Input.Player.Jump.performed += Jump;
         InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
         InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
+        
+        PlayerController.Instance.OnRecoilCompensation += RecoilCompensate;
     }
     
     // Update
@@ -79,6 +81,13 @@ public class PlayerMovement : MonoBehaviour
         
         PlayerController.Instance.CameraContainer.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
         PlayerController.Instance.PlayerEntityContainer.rotation = Quaternion.Euler(0f, m_xOritation, 0f);
+    }
+    
+    // Compensate when player tries to counter recoil
+    private void RecoilCompensate(float value)
+    {
+        m_yOritation -= value;
+        PlayerController.Instance.CameraContainer.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
     }
     
     // Handle player movement

@@ -10359,6 +10359,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d301ef83eed5f04884b3ef4cac0d6b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFire
+--- !u!114 &2047901045 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6301190206590033531, guid: af93481d65cf3d04d8ffbea131def5da,
+    type: 3}
+  m_PrefabInstance: {fileID: 6482416759756731765}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047901034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64e0786b224fc1d4885764be6cb78529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
 --- !u!1 &2048223512 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8991225247086929738, guid: af93481d65cf3d04d8ffbea131def5da,
@@ -10397,6 +10409,7 @@ MonoBehaviour:
   m_randOffset: 2
   m_smooth: 3
   m_rightArm: {fileID: 324632469}
+  m_playerMovement: {fileID: 2047901045}
 --- !u!1 &2115718917
 GameObject:
   m_ObjectHideFlags: 0

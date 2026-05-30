@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     // Player events
     public delegate void MovementChange();
     public delegate void Fire();
+    public delegate void RecoilComp(float comp);
+    
     public event MovementChange OnStartSprinting;
     public void TriggerOnStartSprinting() { OnStartSprinting?.Invoke(); }
     public event MovementChange OnStartCrouching;
@@ -19,6 +21,8 @@ public class PlayerController : MonoBehaviour
     public void TriggerOnBackToWalking() { OnBackToWalking?.Invoke(); }
     public event Fire OnFire;
     public void TriggerOnFire() { OnFire?.Invoke(); }
+    public event RecoilComp OnRecoilCompensation;
+    public void TriggerOnRecoilCompensation(float comp) { OnRecoilCompensation?.Invoke(comp); }
     
     // Player respawn
     private Vector3 m_respawnPos;   // Ground point
