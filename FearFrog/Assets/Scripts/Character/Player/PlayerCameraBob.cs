@@ -20,7 +20,7 @@ public class PlayerCameraBob : MonoBehaviour
     void Start()
     {
         // Varialbe initialization
-        m_startPos = PlayerStatus.Instance.Camera.localPosition;
+        m_startPos = PlayerController.Instance.Camera.localPosition;
     }
 
     // Update
@@ -29,9 +29,9 @@ public class PlayerCameraBob : MonoBehaviour
         if (!m_bobEnabled) return;
 
         // Check to play camera bob effect
-        Vector3 horiVelocity = PlayerStatus.Instance.PlayerRb.linearVelocity;
+        Vector3 horiVelocity = PlayerController.Instance.PlayerRb.linearVelocity;
         horiVelocity.y = 0f;
-        if (!PlayerStatus.Instance.IsGrounded || horiVelocity.magnitude < m_toggleSpeed)
+        if (!PlayerController.Instance.IsGrounded || horiVelocity.magnitude < m_toggleSpeed)
         {
             StopBob();
         }
@@ -46,12 +46,12 @@ public class PlayerCameraBob : MonoBehaviour
     {
         // Check which frequency and magnitude modifier to use
         float frequency, magModifier;
-        if (PlayerStatus.Instance.IsSprinting)
+        if (PlayerController.Instance.IsSprinting)
         {
             frequency = m_sprintFrequency;
             magModifier = m_sprintMagModifier;
         }
-        else if (PlayerStatus.Instance.IsCrouching)
+        else if (PlayerController.Instance.IsCrouching)
         {
             frequency = m_crouchFrequency;
             magModifier = m_crouchMagModifier;
@@ -68,14 +68,14 @@ public class PlayerCameraBob : MonoBehaviour
         offset.x = (0.6f * m_amplitude * magModifier) * Mathf.Cos((frequency / 2f) * timer);
         offset.y = (-1.2f * m_amplitude * magModifier) * Mathf.Sin(frequency * timer);
         
-        PlayerStatus.Instance.Camera.localPosition += offset;
+        PlayerController.Instance.Camera.localPosition += offset;
     }
 
     // Stop bob motion and move camera back to start position
     private void StopBob()
     {
         timer = 0f;
-        if (PlayerStatus.Instance.Camera.localPosition == m_startPos) return;
-        PlayerStatus.Instance.Camera.localPosition = Vector3.Lerp(PlayerStatus.Instance.Camera.localPosition, m_startPos, 7f * Time.deltaTime);
+        if (PlayerController.Instance.Camera.localPosition == m_startPos) return;
+        PlayerController.Instance.Camera.localPosition = Vector3.Lerp(PlayerController.Instance.Camera.localPosition, m_startPos, 7f * Time.deltaTime);
     }
 }

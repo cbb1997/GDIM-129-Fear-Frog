@@ -8,27 +8,26 @@ public class MenuManager : MonoBehaviour
     [Header("Game Over")]
     [SerializeField] private GameObject gameOverScreen;
 
-    [Header("Pause")]
-    [SerializeField] private GameObject pauseScreen;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.X))
         {
-            if (pauseScreen.activeInHierarchy)
-                PauseGame(false);
-            else
-                PauseGame(true);
+            gameOver();
         }
     }
 
-    public void PauseGame(bool status)
+    public void gameOver()
     {
-        pauseScreen.SetActive(status);
+        gameOverScreen.SetActive(true);
+        Time.timeScale = 0f;
 
-        if (status)
-            Time.timeScale = 0;
-        else
-            Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void Retry()
+    {
+        SceneManager.LoadScene("mrFrog");
     }
 }
