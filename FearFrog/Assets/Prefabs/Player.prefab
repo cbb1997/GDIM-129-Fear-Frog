@@ -638,6 +638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 381237922839345556}
   - component: {fileID: 4739835270369941364}
+  - component: {fileID: 1815945823944803493}
   m_Layer: 8
   m_Name: RA_FPSContainer
   m_TagString: Untagged
@@ -678,6 +679,21 @@ MonoBehaviour:
   m_xMagnitude: 1.2
   m_yMagnitude: 2
   m_centerDist: 5
+--- !u!114 &1815945823944803493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7740829735133045055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c507eda8cc7bfda4da6af1e3c8ecbaf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponSwing
+  m_rightArm: {fileID: 2728093380354583951}
+  m_magnitude: 0.7
+  m_smooth: 5
 --- !u!1 &7892009654374696017
 GameObject:
   m_ObjectHideFlags: 0

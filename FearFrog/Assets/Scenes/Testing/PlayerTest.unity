@@ -1492,6 +1492,12 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!4 &131707211 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2728093380354583951, guid: af93481d65cf3d04d8ffbea131def5da,
+    type: 3}
+  m_PrefabInstance: {fileID: 6482416759756731765}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &161925891
 GameObject:
   m_ObjectHideFlags: 0
@@ -7852,6 +7858,27 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &1421008601 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7740829735133045055, guid: af93481d65cf3d04d8ffbea131def5da,
+    type: 3}
+  m_PrefabInstance: {fileID: 6482416759756731765}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1421008604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421008601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c507eda8cc7bfda4da6af1e3c8ecbaf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponSwing
+  m_rightArm: {fileID: 131707211}
+  m_magnitude: 0.7
+  m_smooth: 5
 --- !u!43 &1453024134
 Mesh:
   m_ObjectHideFlags: 0
@@ -10482,7 +10509,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7740829735133045055, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1421008604}
   m_SourcePrefab: {fileID: 100100000, guid: af93481d65cf3d04d8ffbea131def5da, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
