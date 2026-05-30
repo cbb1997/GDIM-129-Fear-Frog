@@ -39,7 +39,7 @@ public class PlayerBob : MonoBehaviour
     }
 
     // Update
-    void Update()
+    protected virtual void Update()
     {
         if (!m_bobEnabled) return;
 
@@ -104,7 +104,7 @@ public class PlayerBob : MonoBehaviour
         horiVelocity.y = 0f;
         if (horiVelocity.magnitude >= m_toggleSpeed)
         {
-            PlayerController.Instance.Camera.localPosition = m_startPos;
+            m_bobObj.localPosition = m_startPos;
             m_timer = 0f;
         }
     }
