@@ -1751,6 +1751,12 @@ Transform:
   - {fileID: 91341804}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &324632469 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 381237922839345556, guid: af93481d65cf3d04d8ffbea131def5da,
+    type: 3}
+  m_PrefabInstance: {fileID: 6482416759756731765}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &372209605
 GameObject:
   m_ObjectHideFlags: 0
@@ -5836,7 +5842,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -10375,6 +10381,22 @@ MonoBehaviour:
   m_bobObj: {fileID: 700993282}
   m_xMagnitude: 0.3
   m_yMagnitude: 0.8
+--- !u!114 &2048223516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048223512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82df8e0aabd24ba4ab0f9cf319dbb819, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponRecoil
+  m_recoilMag: 15
+  m_randOffset: 2
+  m_smooth: 3
+  m_rightArm: {fileID: 324632469}
 --- !u!1 &2115718917
 GameObject:
   m_ObjectHideFlags: 0
@@ -10749,6 +10771,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5824584511048501815, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      propertyPath: m_Name
+      value: EntityContainer
+      objectReference: {fileID: 0}
     - target: {fileID: 6029311559761359143, guid: af93481d65cf3d04d8ffbea131def5da,
         type: 3}
       propertyPath: m_xMagnitude
@@ -10822,6 +10849,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2048223514}
+    - targetCorrespondingSourceObject: {fileID: 8991225247086929738, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2048223516}
   m_SourcePrefab: {fileID: 100100000, guid: af93481d65cf3d04d8ffbea131def5da, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

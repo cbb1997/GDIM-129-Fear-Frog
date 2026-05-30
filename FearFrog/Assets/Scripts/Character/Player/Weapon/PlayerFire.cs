@@ -22,6 +22,9 @@ public class PlayerFire : MonoBehaviour
         if (m_ammoLeft > 0)
         {
             // Fire
+            PlayerController.Instance.TriggerOnFire();
+            m_ammoLeft -= 1;
+            
             Ray ray = PlayerController.Instance.Camera.GetComponent<Camera>().ScreenPointToRay(
                 new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
             RaycastHit hitInfo;
@@ -29,8 +32,6 @@ public class PlayerFire : MonoBehaviour
             {
                 // Hit!
             }
-            
-            m_ammoLeft -= 1;
         }
     }
 }
