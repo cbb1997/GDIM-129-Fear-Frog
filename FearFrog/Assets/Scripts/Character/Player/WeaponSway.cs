@@ -6,7 +6,7 @@ public class WeaponSway : MonoBehaviour
 {
     // Member variables
     [SerializeField] private Transform m_rightArm;
-    [SerializeField] private float m_magnitude = 10f;
+    [SerializeField] private float m_magnitude = 0.8f;
     [SerializeField] private float m_smooth = 5f;
     private Quaternion m_initRot;
     
@@ -22,8 +22,8 @@ public class WeaponSway : MonoBehaviour
     {
         // Calculate target quaternion
         Vector2 mouseInput = InputController.Instance.Input.Player.Look.ReadValue<Vector2>();
-        float degX = -mouseInput.x;
-        float degY = mouseInput.y;
+        float degX = -mouseInput.x * m_magnitude;
+        float degY = mouseInput.y * m_magnitude;
 
         Quaternion rotX = Quaternion.AngleAxis(degX, -Vector3.right);
         Quaternion rotY = Quaternion.AngleAxis(degY, Vector3.forward);
