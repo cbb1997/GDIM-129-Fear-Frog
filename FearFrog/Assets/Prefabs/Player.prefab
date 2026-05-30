@@ -692,7 +692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponSwing
   m_rightArm: {fileID: 2728093380354583951}
-  m_magnitude: 0.7
+  m_magnitude: 3
   m_smooth: 5
 --- !u!1 &7892009654374696017
 GameObject:
@@ -925,52 +925,52 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.749
+      value: 0.713
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.478
+      value: -0.486
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.617
+      value: 0.615
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7110615
+      value: 0.71654075
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.17877631
+      value: -0.17801513
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.67370814
+      value: 0.6678775
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09245583
+      value: 0.093913026
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -157.74
+      value: -157.632
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -91.75299
+      value: -92.757996
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 173.211
+      value: 173.593
       objectReference: {fileID: 0}
     - target: {fileID: -7835257668931964899, guid: c482182fced49074f929ee0b9a120dcc,
         type: 3}
