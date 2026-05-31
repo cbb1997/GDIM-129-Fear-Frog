@@ -10779,10 +10779,25 @@ PrefabInstance:
       propertyPath: m_magnitude
       value: 0.8
       objectReference: {fileID: 0}
+    - target: {fileID: 2729250957645087296, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4043726030836972691, guid: af93481d65cf3d04d8ffbea131def5da,
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4479859664882380678, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      propertyPath: m_RenderShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4479859664882380678, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5824584511048501815, guid: af93481d65cf3d04d8ffbea131def5da,
         type: 3}
@@ -10798,6 +10813,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_yMagnitude
       value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6833055033995504394, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      propertyPath: m_RenderShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6833055033995504394, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6833055033995504394, guid: af93481d65cf3d04d8ffbea131def5da,
+        type: 3}
+      propertyPath: m_RequiresDepthTextureOption
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7875313861133947386, guid: af93481d65cf3d04d8ffbea131def5da,
         type: 3}
