@@ -24,12 +24,12 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         GameController.OnGameStateChanged += GameStateListener;
-        //SetCurrentState(EnemyState.Aggressive);
     }
 
     private void Update()
     {
-        UpdateCurrentState();
+        //UpdateCurrentState();
+        SetCurrentState(EnemyState.Aggressive);
     }
 
     // Returns at integer value indicating an "aggro meter"
@@ -88,7 +88,7 @@ public class EnemyController : MonoBehaviour
                 AlertBehavior();
                 break;
             case EnemyState.Aggressive:
-                AlertBehavior();
+                AggressiveBehavior();
                 break;
             case EnemyState.Attacking:
                 AttackBehavior();
@@ -117,7 +117,8 @@ public class EnemyController : MonoBehaviour
 
     private void AggressiveBehavior() 
     {
-        StartCoroutine(EngageAggro());
+        m_Agent.SetDestination(m_Player.transform.position);
+        //StartCoroutine(EngageAggro());
     }
 
     private IEnumerator EngageAggro()
