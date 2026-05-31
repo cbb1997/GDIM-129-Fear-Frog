@@ -912,6 +912,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_Module_DoorRoom_02
       objectReference: {fileID: 0}
+    - target: {fileID: 6840350738146376901, guid: 7e4b8910ee9acf842b022199caf324c8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8103984695124894444, guid: 7e4b8910ee9acf842b022199caf324c8,
         type: 3}
       propertyPath: m_LocalPosition.x
