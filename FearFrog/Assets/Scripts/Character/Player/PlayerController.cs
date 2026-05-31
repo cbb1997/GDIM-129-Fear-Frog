@@ -8,6 +8,22 @@ public class PlayerController : MonoBehaviour
     private static PlayerController m_instance;
     public static PlayerController Instance { get { return m_instance; } }
     
+    // Player events
+    public delegate void MovementChange();
+    public delegate void Fire();
+    public delegate void RecoilComp(float comp);
+    
+    public event MovementChange OnStartSprinting;
+    public void TriggerOnStartSprinting() { OnStartSprinting?.Invoke(); }
+    public event MovementChange OnStartCrouching;
+    public void TriggerOnStartCrouching() { OnStartCrouching?.Invoke(); }
+    public event MovementChange OnBackToWalking;
+    public void TriggerOnBackToWalking() { OnBackToWalking?.Invoke(); }
+    public event Fire OnFire;
+    public void TriggerOnFire() { OnFire?.Invoke(); }
+    public event RecoilComp OnRecoilCompensation;
+    public void TriggerOnRecoilCompensation(float comp) { OnRecoilCompensation?.Invoke(comp); }
+    
     // Player respawn
     private Vector3 m_respawnPos;   // Ground point
     public Vector3 RespawnPos { set { m_respawnPos = value; } }
@@ -28,6 +44,8 @@ public class PlayerController : MonoBehaviour
     public ref RaycastHit GroundHit { get { return ref m_groundHit; } }
     
     // Reference to other player gameObjects/components
+    [SerializeField] private Transform m_playerEntityContainer;
+    public Transform PlayerEntityContainer { get { return m_playerEntityContainer; } }
     [SerializeField] private Transform m_playerEntity;
     public Transform PlayerEntity { get { return m_playerEntity; } }
     [SerializeField] private Transform m_cameraContainer;
