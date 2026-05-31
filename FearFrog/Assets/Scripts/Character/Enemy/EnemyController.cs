@@ -16,15 +16,15 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private EnemyData m_EnemyData;
     [SerializeField] private Animator m_Animator;
     [SerializeField] private NavMeshAgent m_Agent;
-
     [SerializeField] private GameObject m_Player;
+    
+    [SerializeField] private float m_YOffset;
 
     private EnemyState m_CurrentState;
 
     private void Start()
     {
         GameController.OnGameStateChanged += GameStateListener;
-        //SetCurrentState(EnemyState.Aggressive);
     }
 
     private void Update()
@@ -35,7 +35,26 @@ public class EnemyController : MonoBehaviour
     // Returns at integer value indicating an "aggro meter"
     private int DetectPlayer() 
     {
-        return 0;
+        RaycastHit vision = DrawRay();
+        if (vision.collider.gameObject.tag != "Player")
+        {
+            return 0;
+        }
+
+        return (int) (vision.distance * 2);
+    }
+
+    private RaycastHit DrawRay() 
+    {
+        RaycastHit hit;
+        Physics.Raycast(OffestPosition(), transform.TransformDirection(Vector3.forward), out hit, m_EnemyData.DataClass.SightDistance);
+        Debug.DrawRay(OffestPosition(), transform.TransformDirection(Vector3.forward) * m_EnemyData.DataClass.SightDistance, Color.red);
+        return hit;
+    }
+
+    private Vector3 OffestPosition()
+    {
+        return new Vector3(transform.position.x, transform.position.y + m_YOffset, transform.position.z);
     }
 
     private void UpdateLocation()
@@ -55,10 +74,8 @@ public class EnemyController : MonoBehaviour
         {
             SetCurrentState(EnemyState.Aggressive);
         }
-        else if (playerMeter > 0)
-        {
-            SetCurrentState(EnemyState.Alert);
-        }
+       
+        SetCurrentState(EnemyState.Alert);
     }
 
     private void GameStateListener(GameState state)
@@ -88,7 +105,7 @@ public class EnemyController : MonoBehaviour
                 AlertBehavior();
                 break;
             case EnemyState.Aggressive:
-                AlertBehavior();
+                AggressiveBehavior();
                 break;
             case EnemyState.Attacking:
                 AttackBehavior();
@@ -117,7 +134,8 @@ public class EnemyController : MonoBehaviour
 
     private void AggressiveBehavior() 
     {
-        StartCoroutine(EngageAggro());
+        m_Agent.SetDestination(m_Player.transform.position);
+        //StartCoroutine(EngageAggro());
     }
 
     private IEnumerator EngageAggro()
@@ -136,4 +154,5 @@ public class EnemyController : MonoBehaviour
 
     public void Respawn() { }
     public void Kill() { }
+
 }
