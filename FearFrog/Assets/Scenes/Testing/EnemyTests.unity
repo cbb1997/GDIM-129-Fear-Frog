@@ -1064,6 +1064,7 @@ MonoBehaviour:
   m_Animator: {fileID: 102387044}
   m_Agent: {fileID: 2147430750}
   m_Player: {fileID: 341602893}
+  m_YOffset: 1.75
 --- !u!195 &2147430750
 NavMeshAgent:
   m_ObjectHideFlags: 0

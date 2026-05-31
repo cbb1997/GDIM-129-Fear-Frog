@@ -16,8 +16,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private EnemyData m_EnemyData;
     [SerializeField] private Animator m_Animator;
     [SerializeField] private NavMeshAgent m_Agent;
-
     [SerializeField] private GameObject m_Player;
+    
+    [SerializeField] private float m_YOffset;
 
     private EnemyState m_CurrentState;
 
@@ -28,22 +29,32 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        //UpdateCurrentState();
-        SetCurrentState(EnemyState.Aggressive);
+        UpdateCurrentState();
     }
 
     // Returns at integer value indicating an "aggro meter"
     private int DetectPlayer() 
     {
-        return 0;
+        RaycastHit vision = DrawRay();
+        if (vision.collider.gameObject.tag != "Player")
+        {
+            return 0;
+        }
+
+        return (int) (vision.distance * 2);
     }
 
     private RaycastHit DrawRay() 
     {
         RaycastHit hit;
-        Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, m_EnemyData.DataClass.SightDistance);
-        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
+        Physics.Raycast(OffestPosition(), transform.TransformDirection(Vector3.forward), out hit, m_EnemyData.DataClass.SightDistance);
+        Debug.DrawRay(OffestPosition(), transform.TransformDirection(Vector3.forward) * m_EnemyData.DataClass.SightDistance, Color.red);
         return hit;
+    }
+
+    private Vector3 OffestPosition()
+    {
+        return new Vector3(transform.position.x, transform.position.y + m_YOffset, transform.position.z);
     }
 
     private void UpdateLocation()
@@ -63,10 +74,8 @@ public class EnemyController : MonoBehaviour
         {
             SetCurrentState(EnemyState.Aggressive);
         }
-        else if (playerMeter > 0)
-        {
-            SetCurrentState(EnemyState.Alert);
-        }
+       
+        SetCurrentState(EnemyState.Alert);
     }
 
     private void GameStateListener(GameState state)
