@@ -38,6 +38,14 @@ public class EnemyController : MonoBehaviour
         return 0;
     }
 
+    private RaycastHit DrawRay() 
+    {
+        RaycastHit hit;
+        Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, m_EnemyData.DataClass.SightDistance);
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
+        return hit;
+    }
+
     private void UpdateLocation()
     {
         m_EnemyData.DataClass.Position = GetComponent<Transform>().position;
@@ -137,4 +145,5 @@ public class EnemyController : MonoBehaviour
 
     public void Respawn() { }
     public void Kill() { }
+
 }
