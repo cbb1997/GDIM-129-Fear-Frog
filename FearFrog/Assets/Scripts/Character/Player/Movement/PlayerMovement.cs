@@ -24,8 +24,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float m_jumpAcceleration = 320f;
     
     // Crouch height change member variables
-    private float m_stepUpHeight = 0.4f;
-    private float m_standCameraHeight = 0.85f;
+    private float m_stepUpHeight = 0.8f;
+    private float m_standCameraHeight = 1.75f;
     private float m_crouchCameraHeight = 0.05f;
     private float m_crouchShrinkRatio = 0.4f;
     
@@ -45,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
         InputController.Instance.Input.Player.Jump.performed += Jump;
         InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
         InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
+        
+        PlayerController.Instance.OnRecoilCompensation += RecoilCompensate;
     }
     
     // Update
@@ -75,10 +77,17 @@ public class PlayerMovement : MonoBehaviour
         Vector2 lookDirection = InputController.Instance.Input.Player.Look.ReadValue<Vector2>();
         m_xOritation += lookDirection.x * m_cameraSensitivity * Time.deltaTime;
         m_yOritation += lookDirection.y * m_cameraSensitivity * Time.deltaTime;
-        m_yOritation = Math.Clamp(m_yOritation, -90f, 90f);
+        m_yOritation = Math.Clamp(m_yOritation, -78f, 85f);
         
         PlayerController.Instance.CameraContainer.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
-        PlayerController.Instance.PlayerEntity.rotation = Quaternion.Euler(0f, m_xOritation, 0f);
+        PlayerController.Instance.PlayerEntityContainer.rotation = Quaternion.Euler(0f, m_xOritation, 0f);
+    }
+    
+    // Compensate when player tries to counter recoil
+    private void RecoilCompensate(float value)
+    {
+        m_yOritation -= value;
+        PlayerController.Instance.CameraContainer.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
     }
     
     // Handle player movement
@@ -170,6 +179,8 @@ public class PlayerMovement : MonoBehaviour
             PlayerController.Instance.IsSprinting = true;
             m_currMoveAcceleration = m_sprintAcceleration;
             m_currMaxAirVelocity = m_maxSprintAirVelocity;
+            // Invoke event
+            PlayerController.Instance.TriggerOnStartSprinting();
         }
     }
 
@@ -179,16 +190,20 @@ public class PlayerMovement : MonoBehaviour
         {
             PlayerController.Instance.IsSprinting = false;
             m_currMoveAcceleration = m_walkAcceleration;
-            m_currMaxAirVelocity = m_maxWalkAirVelocity;   
+            m_currMaxAirVelocity = m_maxWalkAirVelocity;
+            // Invoke event
+            PlayerController.Instance.TriggerOnBackToWalking();
         }
     }
     
     // Exit sprint if player stops moving
     private void SprintStopCheck()
     {
-        if (PlayerController.Instance.IsSprinting && PlayerController.Instance.PlayerRb.linearVelocity.magnitude < 0.0001f)
+        if (PlayerController.Instance.IsSprinting && PlayerController.Instance.PlayerRb.linearVelocity.magnitude < 0.75f)
         {
             StopSprinting();
+            // Invoke event
+            PlayerController.Instance.TriggerOnBackToWalking();
         }
     }
     
@@ -222,6 +237,9 @@ public class PlayerMovement : MonoBehaviour
             float localPosY = m_stepUpHeight + localScaleY - 1f;
             PlayerController.Instance.PlayerEntity.localScale = new Vector3(1f, localScaleY, 1f);
             PlayerController.Instance.PlayerEntity.localPosition = new Vector3(0f, localPosY, 0f);
+            
+            // Invoke event
+            PlayerController.Instance.TriggerOnStartCrouching();
         }
     }
 
@@ -235,6 +253,9 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(CrounchCameraChange(new Vector3(0f, m_standCameraHeight, 0f)));
             PlayerController.Instance.PlayerEntity.localScale = new Vector3(1f, 1f - m_stepUpHeight / 2f, 1f);
             PlayerController.Instance.PlayerEntity.localPosition = new Vector3(0f, m_stepUpHeight / 2f, 0f);
+            
+            // Invoke event
+            PlayerController.Instance.TriggerOnBackToWalking();
         }
     }
 
@@ -244,7 +265,7 @@ public class PlayerMovement : MonoBehaviour
         while (Vector3.Distance(PlayerController.Instance.CameraContainer.localPosition, targetPos) > 0.01f)
         {
             PlayerController.Instance.CameraContainer.localPosition =
-                Vector3.Lerp(PlayerController.Instance.CameraContainer.localPosition, targetPos, 0.25f);
+                Vector3.Lerp(PlayerController.Instance.CameraContainer.localPosition, targetPos, 0.12f);
             yield return null;
         }
     }
