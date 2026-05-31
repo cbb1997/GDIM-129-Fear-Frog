@@ -2,12 +2,24 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
+public enum GameState 
+{
+    Menu,
+    Active,
+    Paused,
+    Over
+}
+
 public class GameController : MonoBehaviour
 {
     [SerializeField] private GameData m_GameData;
     
     [SerializeField] private GameObject m_Player;
     [SerializeField] private GameObject m_StartingLevel;
+
+    public static Action<GameState> OnGameStateChanged;
+
+    private GameState m_CurrentState;
 
     private void Start()
     {
@@ -21,6 +33,12 @@ public class GameController : MonoBehaviour
     {
         m_StartingLevel.SetActive(true);
         m_Player.SetActive(true);
+    }
+
+    private void SetGameState(GameState state)
+    { 
+        m_CurrentState = state;
+        OnGameStateChanged?.Invoke(m_CurrentState);
     }
 
     private void QuitGame()

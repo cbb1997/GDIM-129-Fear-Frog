@@ -1,251 +1,89 @@
 using System;
-using System.Collections;
-using Unity.AppUI.UI;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+// Singleton class for player related statistics
+public class PlayerController : MonoBehaviour
 {
-    // Movement member variables
-    [SerializeField] private float m_walkAcceleration = 30f;
-    private float m_maxWalkAirVelocity = 1.2f;
-    [SerializeField] private float m_sprintAcceleration = 45f;
-    private float m_maxSprintAirVelocity = 6f;
-    [SerializeField] private float m_crouchAcceleration = 18f;
-    private float m_currMoveAcceleration;
-    private float m_currMaxAirVelocity;
+    // Singleton variables
+    private static PlayerController m_instance;
+    public static PlayerController Instance { get { return m_instance; } }
     
-    // Look member variables
-    [SerializeField] private float m_cameraSensitivity = 100f;
-    private float m_xOritation = 0; // Record of player look direction
-    private float m_yOritation = 0;
+    // Player events
+    public delegate void MovementChange();
+    public delegate void Fire();
+    public delegate void RecoilComp(float comp);
     
-    // Jump member variables
-    [SerializeField] private float m_jumpAcceleration = 320f;
+    public event MovementChange OnStartSprinting;
+    public void TriggerOnStartSprinting() { OnStartSprinting?.Invoke(); }
+    public event MovementChange OnStartCrouching;
+    public void TriggerOnStartCrouching() { OnStartCrouching?.Invoke(); }
+    public event MovementChange OnBackToWalking;
+    public void TriggerOnBackToWalking() { OnBackToWalking?.Invoke(); }
+    public event Fire OnFire;
+    public void TriggerOnFire() { OnFire?.Invoke(); }
+    public event RecoilComp OnRecoilCompensation;
+    public void TriggerOnRecoilCompensation(float comp) { OnRecoilCompensation?.Invoke(comp); }
     
-    // Crouch height change member variables
-    private float m_stepUpHeight = 0.4f;
-    private float m_standCameraHeight = 0.85f;
-    private float m_crouchCameraHeight = 0.05f;
-    private float m_crouchShrinkRatio = 0.4f;
+    // Player respawn
+    private Vector3 m_respawnPos;   // Ground point
+    public Vector3 RespawnPos { set { m_respawnPos = value; } }
+    
+    // Player status
+    private bool m_isGrounded = true;
+    public bool IsGrounded { get { return m_isGrounded; } set { m_isGrounded = value; } }
+    private bool m_isGroundedPrev = true;
+    public bool IsGroundedPrev { get { return m_isGroundedPrev; } set { m_isGroundedPrev = value; } }
+    private bool m_isJumping = false;
+    public bool IsJumping { get { return m_isJumping; } set { m_isJumping = value; } }
+    
+    private bool m_isSprinting = false;
+    public bool IsSprinting { get { return m_isSprinting; } set { m_isSprinting = value; } }
+    private bool m_isCrouching = false;
+    public bool IsCrouching { get { return m_isCrouching; } set { m_isCrouching = value; } }
+    private RaycastHit m_groundHit;
+    public ref RaycastHit GroundHit { get { return ref m_groundHit; } }
+    
+    // Reference to other player gameObjects/components
+    [SerializeField] private Transform m_playerEntityContainer;
+    public Transform PlayerEntityContainer { get { return m_playerEntityContainer; } }
+    [SerializeField] private Transform m_playerEntity;
+    public Transform PlayerEntity { get { return m_playerEntity; } }
+    [SerializeField] private Transform m_cameraContainer;
+    public Transform CameraContainer { get { return m_cameraContainer; } }
+    [SerializeField] private Transform m_camera;
+    public Transform Camera { get { return m_camera; } }
+    [SerializeField] private Transform m_footPos;
+    public Transform FootPos { get { return m_footPos; } }
+	private Rigidbody m_playerRb;
+    public Rigidbody PlayerRb { get { return m_playerRb; } }
     
 
+    // Awake
+    void Awake()
+    {
+        // Singleton
+        if (m_instance != null && m_instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        
+        m_instance = this;
+    }
+    
     // Start
     void Start()
     {
-        // Variable initialization
-        m_currMoveAcceleration = m_walkAcceleration;
-        m_currMaxAirVelocity = m_maxWalkAirVelocity;
+        // Initialization
+        m_playerRb = this.GetComponent<Rigidbody>();
+    }
+    
+    // Player respawn
+    public void Respawn()
+    {
+        Vector3 pos = m_respawnPos;
+        pos.y += 0.5f;
         
-        // Lock cursor
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        
-        // Link jump, sprint, and crouch functionality
-        InputController.Instance.Input.Player.Jump.performed += Jump;
-        InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
-        InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
-    }
-    
-    // Update
-    void Update()
-    {
-        // Player Look
-        PlayerLook();
-    }
-    
-    // FixedUpdate
-    private void FixedUpdate()
-    {
-        // Sprint stop check
-        SprintStopCheck();
-        
-        // Player move
-        PlayerMove();
-        if (!PlayerStatus.Instance.IsGrounded)
-        {
-            VelocityControl();
-        }
-    }
-    
-    
-    // Handle player looking around
-    private void PlayerLook()
-    {
-        Vector2 lookDirection = InputController.Instance.Input.Player.Look.ReadValue<Vector2>();
-        m_xOritation += lookDirection.x * m_cameraSensitivity * Time.deltaTime;
-        m_yOritation += lookDirection.y * m_cameraSensitivity * Time.deltaTime;
-        m_yOritation = Math.Clamp(m_yOritation, -90f, 90f);
-        
-        PlayerStatus.Instance.CameraContainer.rotation = Quaternion.Euler(-m_yOritation, m_xOritation, 0f);
-        PlayerStatus.Instance.PlayerEntity.rotation = Quaternion.Euler(0f, m_xOritation, 0f);
-    }
-    
-    // Handle player movement
-    private void PlayerMove()
-    {
-        // Calculate new input move direction
-        Vector2 input = InputController.Instance.Input.Player.Move.ReadValue<Vector2>();
-        Vector3 moveDirection = new Vector3(input.x, 0, input.y);
-        moveDirection = (Quaternion.Euler(0f, m_xOritation, 0f) * moveDirection).normalized;
-
-        // Modify input move direction to be parallel to the ground if player is grounded
-        float cos;
-        if (PlayerStatus.Instance.IsGrounded)
-        {
-            cos = Vector3.Dot(moveDirection, PlayerStatus.Instance.GroundHit.normal);       // Cosine of angle between new move direction and normal of surface
-            float degTheta = Mathf.Acos(cos) * Mathf.Rad2Deg;       // Angle between new move direction and normal of surface in degrees
-            degTheta -= 90;
-            
-            moveDirection = Quaternion.AngleAxis(degTheta, Vector3.Cross(moveDirection, Vector3.up)) * moveDirection;
-            moveDirection = moveDirection.normalized;
-        }
-        
-        PlayerStatus.Instance.PlayerRb.AddForce(moveDirection * m_currMoveAcceleration, ForceMode.Acceleration);
-    }
-
-    // Contorl player's horizontal velocity when in the air
-    private void VelocityControl()
-    {
-        Vector3 currHorVelocity = PlayerStatus.Instance.PlayerRb.linearVelocity;
-        currHorVelocity.y = 0f;
-        if (currHorVelocity.magnitude > m_currMaxAirVelocity)
-        {
-            currHorVelocity = currHorVelocity.normalized * m_currMaxAirVelocity;
-            // Player's fall down speed should not be affected by velocity control
-            currHorVelocity.y = PlayerStatus.Instance.PlayerRb.linearVelocity.y;
-            PlayerStatus.Instance.PlayerRb.linearVelocity = currHorVelocity;
-        }
-    }
-    
-    
-    // Perform player jump action
-    private void Jump(InputAction.CallbackContext ctx)
-    {
-        // Perform jump is player is grounded
-        if (PlayerStatus.Instance.IsGrounded && !PlayerStatus.Instance.IsJumping)
-        {
-            StopCrouching();
-            PlayerStatus.Instance.PlayerRb.AddForce(new Vector3(0f, m_jumpAcceleration, 0f), ForceMode.Acceleration);
-            PlayerStatus.Instance.IsGrounded = false;
-            // Update jumping state
-            PlayerStatus.Instance.IsJumping = true;
-            StartCoroutine(ResetJumping(0.04f));
-        }
-    }
-    
-    private IEnumerator ResetJumping(float targetTime)      // Reset player jumping state after a short time
-    {
-        float timer = 0f;
-        while (timer < targetTime)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        PlayerStatus.Instance.IsJumping = false;
-    }
-    
-    
-    // Toggle player sprint
-    private void ToggleSprint(InputAction.CallbackContext ctx)
-    {
-        if (PlayerStatus.Instance.IsGrounded)   // Only allow toggling when player's grounded
-        {
-            if (PlayerStatus.Instance.IsSprinting)      // Stop sprinting
-            {
-                StopSprinting();
-            }
-            else                                        // Start sprinting
-            {
-                StopCrouching();
-                StartSprinting();
-            }
-        }
-    }
-
-    private void StartSprinting()   // Start sprinting
-    {
-        if (!PlayerStatus.Instance.IsSprinting)
-        {
-            PlayerStatus.Instance.IsSprinting = true;
-            m_currMoveAcceleration = m_sprintAcceleration;
-            m_currMaxAirVelocity = m_maxSprintAirVelocity;
-        }
-    }
-
-    private void StopSprinting()    // Stop sprinting
-    {
-        if (PlayerStatus.Instance.IsSprinting)
-        {
-            PlayerStatus.Instance.IsSprinting = false;
-            m_currMoveAcceleration = m_walkAcceleration;
-            m_currMaxAirVelocity = m_maxWalkAirVelocity;   
-        }
-    }
-    
-    // Exit sprint if player stops moving
-    private void SprintStopCheck()
-    {
-        if (PlayerStatus.Instance.IsSprinting && PlayerStatus.Instance.PlayerRb.linearVelocity.magnitude < 0.0001f)
-        {
-            StopSprinting();
-        }
-    }
-    
-    
-    // Toggle player crouch
-    private void ToggleCrouch(InputAction.CallbackContext ctx)
-    {
-        if (PlayerStatus.Instance.IsGrounded) // Only allow toggling when player's grounded
-        {
-            if (PlayerStatus.Instance.IsCrouching)      // Stop crouching
-            {
-                StopCrouching();
-            }
-            else                    // Start crouching
-            {
-                StopSprinting();
-                StartCrouching();
-            }
-        }
-    }
-
-    private void StartCrouching()   // Start crouching
-    {
-        if (!PlayerStatus.Instance.IsCrouching)
-        {
-            PlayerStatus.Instance.IsCrouching = true;
-            m_currMoveAcceleration = m_crouchAcceleration;
-            // Update player entity and camera
-            StartCoroutine(CrounchCameraChange(new Vector3(0f, m_crouchCameraHeight, 0f)));
-            float localScaleY = (2f * (1f - m_crouchShrinkRatio) - m_stepUpHeight) / 2f;
-            float localPosY = m_stepUpHeight + localScaleY - 1f;
-            PlayerStatus.Instance.PlayerEntity.localScale = new Vector3(1f, localScaleY, 1f);
-            PlayerStatus.Instance.PlayerEntity.localPosition = new Vector3(0f, localPosY, 0f);
-        }
-    }
-
-    private void StopCrouching()    // Stop crouching
-    {
-        if (PlayerStatus.Instance.IsCrouching)
-        {
-            PlayerStatus.Instance.IsCrouching = false;
-            m_currMoveAcceleration = m_walkAcceleration;
-            // Update player entity and camera
-            StartCoroutine(CrounchCameraChange(new Vector3(0f, m_standCameraHeight, 0f)));
-            PlayerStatus.Instance.PlayerEntity.localScale = new Vector3(1f, 1f - m_stepUpHeight / 2f, 1f);
-            PlayerStatus.Instance.PlayerEntity.localPosition = new Vector3(0f, m_stepUpHeight / 2f, 0f);
-        }
-    }
-
-    // Smooth transition of main camera when toggling crounch
-    private IEnumerator CrounchCameraChange(Vector3 targetPos)
-    {
-        while (Vector3.Distance(PlayerStatus.Instance.CameraContainer.localPosition, targetPos) > 0.01f)
-        {
-            PlayerStatus.Instance.CameraContainer.localPosition =
-                Vector3.Lerp(PlayerStatus.Instance.CameraContainer.localPosition, targetPos, 0.25f);
-            yield return null;
-        }
+        transform.position = pos;
     }
 }
