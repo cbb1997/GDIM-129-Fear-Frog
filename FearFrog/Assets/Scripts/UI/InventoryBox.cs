@@ -3,10 +3,10 @@ using static UnityEditor.Timeline.Actions.MenuPriority;
 
 public class InventoryBox : MonoBehaviour
 {
-    public ItemData itemData;
+    [HideInInspector] public string itemName;
 
     public void SelectItem()
     {
-        UILocator.Instance.inventoryUI.ShowItemDesc(itemData.DataClass);
+        UILocator.Instance.inventoryUI.ShowItemDesc(itemName);
     }
 }

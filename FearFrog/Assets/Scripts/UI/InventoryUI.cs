@@ -48,15 +48,14 @@ public class InventoryUI : MonoBehaviour
             if (dataClasses[i] != null)
             {
                 inventoryIcon[i].sprite = dataClasses[i].Icon;
-                inventoryBoxes[i].itemDataClass = dataClasses[i];
+                inventoryBoxes[i].itemName = dataClasses[i].Name;
             }
         }
     }
 
-    public void ShowItemDesc(ItemDataClass itemData)
+    public void ShowItemDesc(string name)
     {
-        Debug.Log(itemData.Name);
-        itemName.text = itemData.Name;
+        itemName.text = name;
     }
 
 }
