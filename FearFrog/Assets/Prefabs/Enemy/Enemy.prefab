@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1582152479722232726}
   - component: {fileID: 8796184897002496516}
   - component: {fileID: 8521209927047682685}
+  - component: {fileID: 4851302146745996165}
   - component: {fileID: 1878286323740494619}
   - component: {fileID: 7949767170715618707}
   m_Layer: 10
@@ -64,7 +65,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.25
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -87,6 +88,29 @@ MonoBehaviour:
   m_YOffset: 1.75
   m_CurrentState: 0
   m_PatrolIndex: 0
+--- !u!136 &4851302146745996165
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8144481565662073309}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.75
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!54 &1878286323740494619
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -123,12 +147,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 8144481565662073309}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 1
+  m_Radius: 0.4
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 5
+  m_StoppingDistance: 0.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7187357953593204137}
   - component: {fileID: 1331233800991184225}
   - component: {fileID: -4875692706366279406}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PatrolTarget
   m_TagString: PatrolTarget
   m_Icon: {fileID: 0}
@@ -102,10 +102,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1024
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 64
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

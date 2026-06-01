@@ -165,7 +165,6 @@ public class EnemyController : MonoBehaviour
     public void Respawn() { }
     public void Kill() { }
 
-    /*
     private void OnCollisionEnter(Collision collision) 
     {
         if (collision.gameObject.tag == "PatrolTarget")
@@ -173,7 +172,6 @@ public class EnemyController : MonoBehaviour
             UpdatePatrolTarget();
         }
     }
-    */
 
     private void OnTriggerEnter(Collider other)
     {
