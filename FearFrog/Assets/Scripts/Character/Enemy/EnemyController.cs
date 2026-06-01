@@ -140,7 +140,7 @@ public class EnemyController : MonoBehaviour
 
     private void UpdatePatrolTarget() 
     {
-        if (m_PatrolIndex == m_PatrolTargets.Length)
+        if (m_PatrolIndex == m_PatrolTargets.Length - 1)
         {
             m_PatrolIndex = 0;
         }
@@ -165,11 +165,19 @@ public class EnemyController : MonoBehaviour
     public void Respawn() { }
     public void Kill() { }
 
+    /*
     private void OnCollisionEnter(Collision collision) 
     {
-        Debugger.Log(collision.gameObject.tag);
-
         if (collision.gameObject.tag == "PatrolTarget")
+        {
+            UpdatePatrolTarget();
+        }
+    }
+    */
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "PatrolTarget")
         {
             UpdatePatrolTarget();
         }
