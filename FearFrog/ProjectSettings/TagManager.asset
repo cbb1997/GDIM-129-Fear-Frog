@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Item
   - UI
+  - PatrolTarget
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,7 @@ TagManager:
   - Trigger
   - FPS
   - Obstacle
-  - 
-  - 
+  - Enemy
   - 
   - 
   - 

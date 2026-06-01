@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using System;
 
 public enum EnemyState 
 { 
@@ -20,11 +21,15 @@ public class EnemyController : MonoBehaviour
     
     [SerializeField] private float m_YOffset;
 
-    private EnemyState m_CurrentState;
+    [ReadOnly][SerializeField] private EnemyState m_CurrentState;
+
+    private GameObject[] m_PatrolTargets;
+    [ReadOnly][SerializeField] private int m_PatrolIndex;
 
     private void Start()
     {
         GameController.OnGameStateChanged += GameStateListener;
+        InitPatrol();
     }
 
     private void Update()
@@ -36,7 +41,7 @@ public class EnemyController : MonoBehaviour
     private int DetectPlayer() 
     {
         RaycastHit vision = DrawRay();
-        if (vision.collider.gameObject.tag != "Player")
+        if (vision.collider != null && vision.collider.gameObject.tag != "Player")
         {
             return 0;
         }
@@ -124,25 +129,30 @@ public class EnemyController : MonoBehaviour
 
     private void AlertBehavior() 
     {
-        m_Agent.SetDestination(GetPatrolTarget());
+        m_Agent.SetDestination(m_PatrolTargets[m_PatrolIndex].transform.position);
     }
 
-    private Vector3 GetPatrolTarget() 
+    private void InitPatrol()
     {
-        return Vector3.zero;
+        m_PatrolTargets = GameObject.FindGameObjectsWithTag("PatrolTarget");
+        m_PatrolIndex = new System.Random().Next(m_PatrolTargets.Length - 1);
+    }
+
+    private void UpdatePatrolTarget() 
+    {
+        if (m_PatrolIndex == m_PatrolTargets.Length - 1)
+        {
+            m_PatrolIndex = 0;
+        }
+        else
+        {
+            ++m_PatrolIndex;
+        }
     }
 
     private void AggressiveBehavior() 
     {
         m_Agent.SetDestination(m_Player.transform.position);
-        //StartCoroutine(EngageAggro());
-    }
-
-    private IEnumerator EngageAggro()
-    {
-        m_Agent.SetDestination(m_Player.transform.position);
-
-        yield return new WaitForSeconds(m_EnemyData.DataClass.AggroTime);
     }
 
     private void AttackBehavior() { }
@@ -155,4 +165,19 @@ public class EnemyController : MonoBehaviour
     public void Respawn() { }
     public void Kill() { }
 
+    private void OnCollisionEnter(Collision collision) 
+    {
+        if (collision.gameObject.tag == "PatrolTarget")
+        {
+            UpdatePatrolTarget();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "PatrolTarget")
+        {
+            UpdatePatrolTarget();
+        }
+    }
 }
