@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8796184897002496516}
   - component: {fileID: 8521209927047682685}
   - component: {fileID: 7949767170715618707}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -84,6 +84,8 @@ MonoBehaviour:
   m_Agent: {fileID: 7949767170715618707}
   m_Player: {fileID: 0}
   m_YOffset: 1.75
+  m_CurrentState: 0
+  m_PatrolIndex: 0
 --- !u!195 &7949767170715618707
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -168,6 +170,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MonsterModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 686452288582723204, guid: c3cbb6c6852aeff44bebc0230ac1aa84,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2186146772585557962, guid: c3cbb6c6852aeff44bebc0230ac1aa84,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5217893848662822611, guid: c3cbb6c6852aeff44bebc0230ac1aa84,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
