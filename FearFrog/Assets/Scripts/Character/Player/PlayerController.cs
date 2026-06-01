@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
     public bool IsCrouching { get { return m_isCrouching; } set { m_isCrouching = value; } }
     private RaycastHit m_groundHit;
     public ref RaycastHit GroundHit { get { return ref m_groundHit; } }
+    private float m_playerScale = 1f;
+    public float PlayerScale { get { return m_playerScale; } }
     
     // Reference to other player gameObjects/components
     [SerializeField] private Transform m_playerEntityContainer;
@@ -76,6 +78,7 @@ public class PlayerController : MonoBehaviour
     {
         // Initialization
         m_playerRb = this.GetComponent<Rigidbody>();
+        m_playerScale = transform.localScale.x;
     }
     
     // Player respawn

@@ -8,7 +8,7 @@ using UnityEngine.Diagnostics;
 public class PlayerPhysics : MonoBehaviour
 {
     // Grounded check variables
-    private float m_gcRadius = 0.37f;       // Grounded check shpere radius
+    private float m_gcRadius = 0.3f;       // Grounded check shpere radius
     private float m_groundDrag = 5f;
     private float m_airDrag = 0f;
     // [SerializeField] [Range(0f, 90f)] private float m_maxGroundAngle = 45f;
@@ -18,8 +18,8 @@ public class PlayerPhysics : MonoBehaviour
     private float m_playerScaleY;
     private float m_gravity = 9.81f * 2.5f;
     private float m_dfCoef = 0.4f;          // Dynamic friction coefficient
-    private float m_stepUpHeight = 0.8f;       // Player floating height
-    private float m_stepDownHeight = 0.4f;     // Player step down distance
+    private float m_stepUpHeight;       // Player floating height
+    private float m_stepDownHeight;    // Player step down distance
     
     
     // Start
@@ -28,10 +28,18 @@ public class PlayerPhysics : MonoBehaviour
         // Initilization
         m_playerWeight = PlayerController.Instance.PlayerRb.mass;
         m_playerScaleY = PlayerController.Instance.PlayerEntity.localScale.y;
+
+        m_gcRadius = 0.3f * PlayerController.Instance.PlayerScale;
+        m_stepUpHeight = 0.7f;
+        m_stepDownHeight = 0.35f;
+        PlayerController.Instance.FootPos.localPosition = 
+            new Vector3(0f, -1.6f * PlayerController.Instance.PlayerScale - 0.05f + m_gcRadius, 0f);
         
         // Set player entity scale and position
-        PlayerController.Instance.PlayerEntity.localScale = new Vector3(1f, m_playerScaleY - m_stepUpHeight / 2f, 1f);
-        PlayerController.Instance.PlayerEntity.localPosition = new Vector3(0f, m_stepUpHeight / 2f, 0f);
+        PlayerController.Instance.PlayerEntity.localScale = 
+            new Vector3(1f, m_playerScaleY - m_stepUpHeight / 2f, 1f);
+        PlayerController.Instance.PlayerEntity.localPosition = 
+            new Vector3(0f, m_stepUpHeight / 2f, 0f);
     }
     
     // FixedUpdate
@@ -143,7 +151,7 @@ public class PlayerPhysics : MonoBehaviour
     {
         // Readjust player height
         Vector3 playerCenter = transform.position;
-        float stepUpAmount = PlayerController.Instance.GroundHit.point.y + m_playerScaleY - transform.position.y;
+        float stepUpAmount = PlayerController.Instance.GroundHit.point.y + m_playerScaleY * PlayerController.Instance.PlayerScale - transform.position.y;
         // Adjustment for ground point NOT exactly below the player's center
         playerCenter.y = PlayerController.Instance.GroundHit.point.y;
         float d = Vector3.Distance(PlayerController.Instance.GroundHit.point, playerCenter);
@@ -167,6 +175,7 @@ public class PlayerPhysics : MonoBehaviour
             Vector3 drawPos = transform.position;
             drawPos.y += PlayerController.Instance.FootPos.localPosition.y;
             Gizmos.DrawSphere(drawPos, m_gcRadius);
+            Debug.Log(m_gcRadius);
             
             // Grounded point
             Gizmos.color = Color.red;
