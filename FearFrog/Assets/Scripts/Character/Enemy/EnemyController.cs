@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
     
     [SerializeField] private float m_YOffset;
 
-    private EnemyState m_CurrentState;
+    [ReadOnly] [SerializeField] private EnemyState m_CurrentState;
 
     private void Start()
     {
