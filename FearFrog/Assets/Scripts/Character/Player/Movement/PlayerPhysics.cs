@@ -175,7 +175,6 @@ public class PlayerPhysics : MonoBehaviour
             Vector3 drawPos = transform.position;
             drawPos.y += PlayerController.Instance.FootPos.localPosition.y;
             Gizmos.DrawSphere(drawPos, m_gcRadius);
-            Debug.Log(m_gcRadius);
             
             // Grounded point
             Gizmos.color = Color.red;
