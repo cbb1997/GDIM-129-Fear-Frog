@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Animator: {fileID: 5476594590972091968}
   m_Agent: {fileID: 7949767170715618707}
   m_Player: {fileID: 0}
-  m_YOffset: 1.75
+  m_YOffset: 3
   m_CurrentState: 0
   m_PatrolIndex: 0
 --- !u!136 &4851302146745996165
