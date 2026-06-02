@@ -56,6 +56,16 @@ public class EnemyController : MonoBehaviour
             SoundManager.PlaySound(SoundType.ROAR, 0.7f);
             roarTimer = UnityEngine.Random.Range(20f, 30f);
         }
+
+        if (GetPlayerDistance() < 50)
+        {
+            PlayerController.staticAnimatorArmL.SetBool("Panic", true);
+        }
+        else
+        {
+            if (PlayerController.staticAnimatorArmL == null) return;
+            PlayerController.staticAnimatorArmL.SetBool("Panic", false);
+        }
     }
 
     #region Helpers
