@@ -232,6 +232,16 @@ public class EnemyController : MonoBehaviour
     {
         OnEnemyStateChange?.Invoke(m_CurrentState, state);
         m_CurrentState = state;
+
+        //Chase Music
+        if (m_CurrentState == EnemyState.Aggressive)
+        {
+            SoundManager.PlayChaseMusic();
+        }
+        else
+        {
+            SoundManager.PlayAmbientMusic();
+        }
         SetAnimState();
     }
 
