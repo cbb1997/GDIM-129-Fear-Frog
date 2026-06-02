@@ -9,7 +9,8 @@ public enum SoundType
     ROAR,
     RELOAD,
     SHOOTING,
-    PAIN
+    PAIN,
+    PICKUPKEY
 }
 
 [RequireComponent(typeof(AudioSource))]
@@ -34,7 +35,7 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        PlayAmbientMusic();
+        //PlayAmbientMusic();
     }
 
     public static void PlaySound(SoundType sound, float volume = 1f)

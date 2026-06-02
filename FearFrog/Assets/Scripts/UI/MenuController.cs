@@ -20,6 +20,8 @@ public class MenuController : MonoBehaviour
 
     public void InitializeStart() 
     {
+        SoundManager.PlayAmbientMusic();
+
         OnStartInitialized?.Invoke();
         DisableMainMenu();
     }
