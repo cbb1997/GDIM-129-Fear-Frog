@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
 
     // Audio for Monster
     [SerializeField] private float roarDelay = 6f;
-    private float roarTimer;
+    private float roarTimer = 20f;
 
     public static Action<EnemyState, EnemyState> OnEnemyStateChange;
 
