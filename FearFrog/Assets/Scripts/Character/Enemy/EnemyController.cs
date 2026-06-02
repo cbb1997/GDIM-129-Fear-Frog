@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
 
     // Audio for Monster
     [SerializeField] private float roarDelay = 6f;
-    private float roarTimer;
+    private float roarTimer = 20f;
 
     public static Action<EnemyState, EnemyState> OnEnemyStateChange;
 
@@ -55,6 +55,16 @@ public class EnemyController : MonoBehaviour
         {
             SoundManager.PlaySound(SoundType.ROAR, 0.7f);
             roarTimer = UnityEngine.Random.Range(20f, 30f);
+        }
+
+        if (GetPlayerDistance() < 50)
+        {
+            PlayerController.staticAnimatorArmL.SetBool("Panic", true);
+        }
+        else
+        {
+            if (PlayerController.staticAnimatorArmL == null) return;
+            PlayerController.staticAnimatorArmL.SetBool("Panic", false);
         }
     }
 
@@ -232,6 +242,16 @@ public class EnemyController : MonoBehaviour
     {
         OnEnemyStateChange?.Invoke(m_CurrentState, state);
         m_CurrentState = state;
+
+        //Chase Music
+        if (m_CurrentState == EnemyState.Aggressive)
+        {
+            SoundManager.PlayChaseMusic();
+        }
+        else
+        {
+            SoundManager.PlayAmbientMusic();
+        }
         SetAnimState();
     }
 

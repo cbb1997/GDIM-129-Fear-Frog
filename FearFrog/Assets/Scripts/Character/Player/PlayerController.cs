@@ -59,7 +59,10 @@ public class PlayerController : MonoBehaviour
 	private Rigidbody m_playerRb;
     public Rigidbody PlayerRb { get { return m_playerRb; } }
     
+    [SerializeField] private Animator animatorArmL;
+    public static Animator staticAnimatorArmL;
 
+    
     // Awake
     void Awake()
     {
@@ -71,6 +74,7 @@ public class PlayerController : MonoBehaviour
         }
         
         m_instance = this;
+        staticAnimatorArmL = animatorArmL;
     }
     
     // Start
