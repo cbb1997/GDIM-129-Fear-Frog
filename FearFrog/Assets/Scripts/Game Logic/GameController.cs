@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
     
     [SerializeField] private GameObject m_Player;
     [SerializeField] private GameObject m_StartingLevel;
+    [SerializeField] private GameObject m_HUD;
 
     public static Action<GameState> OnGameStateChanged;
 
@@ -33,6 +34,7 @@ public class GameController : MonoBehaviour
     {
         //m_StartingLevel.SetActive(true);
         m_Player.SetActive(true);
+        m_HUD.SetActive(true);
         SetGameState(GameState.Active);
     }
 
