@@ -274,11 +274,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e0786b224fc1d4885764be6cb78529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  m_walkAcceleration: 20
-  m_sprintAcceleration: 30
+  m_walkAcceleration: 23
+  m_sprintAcceleration: 37
   m_crouchAcceleration: 15
   m_cameraSensitivity: 50
-  m_jumpAcceleration: 320
+  m_jumpAcceleration: 270
 --- !u!114 &8214335943337012332
 MonoBehaviour:
   m_ObjectHideFlags: 0
