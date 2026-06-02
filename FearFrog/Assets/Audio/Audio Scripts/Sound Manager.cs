@@ -32,6 +32,11 @@ public class SoundManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
+    private void Start()
+    {
+        PlayAmbientMusic();
+    }
+
     public static void PlaySound(SoundType sound, float volume = 1f)
     {
         if (instance == null) return;

@@ -53,8 +53,8 @@ public class EnemyController : MonoBehaviour
 
         if (roarTimer <= 0f)
         {
-            SoundManager.PlaySound(SoundType.ROAR, 0.8f);
-            roarTimer = UnityEngine.Random.Range(10f, 19f);
+            SoundManager.PlaySound(SoundType.ROAR, 0.7f);
+            roarTimer = UnityEngine.Random.Range(20f, 30f);
         }
     }
 
