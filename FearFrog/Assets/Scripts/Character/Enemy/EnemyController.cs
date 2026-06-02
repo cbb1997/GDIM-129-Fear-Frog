@@ -37,6 +37,8 @@ public class EnemyController : MonoBehaviour
         UpdateCurrentState();
     }
 
+    #region Helpers
+
     // Returns at integer value indicating an "aggro meter"
     private int DetectPlayer() 
     {
@@ -49,6 +51,7 @@ public class EnemyController : MonoBehaviour
         return (int) (vision.distance * 2);
     }
 
+    // Draw a raycast and return any hits
     private RaycastHit DrawRay() 
     {
         RaycastHit hit;
@@ -57,6 +60,7 @@ public class EnemyController : MonoBehaviour
         return hit;
     }
 
+    // Calculate the offest position used for drawing raycasts
     private Vector3 OffestPosition()
     {
         return new Vector3(transform.position.x, transform.position.y + m_YOffset, transform.position.z);
@@ -66,6 +70,33 @@ public class EnemyController : MonoBehaviour
     {
         m_EnemyData.DataClass.Position = GetComponent<Transform>().position;
     }
+
+    // Find patrol objects in the scene and select and random target
+    private void InitPatrol()
+    {
+        m_PatrolTargets = GameObject.FindGameObjectsWithTag("PatrolTarget");
+        m_PatrolIndex = new System.Random().Next(m_PatrolTargets.Length - 1);
+    }
+
+    // Change to a new patrol target
+    private void UpdatePatrolTarget()
+    {
+        if (m_PatrolIndex == m_PatrolTargets.Length - 1)
+        {
+            m_PatrolIndex = 0;
+        }
+        else
+        {
+            ++m_PatrolIndex;
+        }
+    }
+
+    private void SetAnimState()
+    {
+        m_Animator.SetInteger("AnimState", (int)m_CurrentState);
+    }
+
+    #endregion
 
     #region State Machine
 
@@ -83,6 +114,7 @@ public class EnemyController : MonoBehaviour
         SetCurrentState(EnemyState.Alert);
     }
 
+    // Ensure enemy ai is diabled when the game is inactive
     private void GameStateListener(GameState state)
     {
         switch (state)
@@ -127,27 +159,12 @@ public class EnemyController : MonoBehaviour
 
     private void IdleBehavior() { }
 
+    // If patrol targets exist, use the navmesh to path to the current target
     private void AlertBehavior() 
     {
+        if (m_PatrolIndex < 0) return;
+
         m_Agent.SetDestination(m_PatrolTargets[m_PatrolIndex].transform.position);
-    }
-
-    private void InitPatrol()
-    {
-        m_PatrolTargets = GameObject.FindGameObjectsWithTag("PatrolTarget");
-        m_PatrolIndex = new System.Random().Next(m_PatrolTargets.Length - 1);
-    }
-
-    private void UpdatePatrolTarget() 
-    {
-        if (m_PatrolIndex == m_PatrolTargets.Length - 1)
-        {
-            m_PatrolIndex = 0;
-        }
-        else
-        {
-            ++m_PatrolIndex;
-        }
     }
 
     private void AggressiveBehavior() 
@@ -156,15 +173,12 @@ public class EnemyController : MonoBehaviour
     }
 
     private void AttackBehavior() { }
-
-    private void SetAnimState() {
-        m_Animator.SetInteger("AnimState", (int) m_CurrentState);
-    }
     #endregion
 
     public void Respawn() { }
     public void Kill() { }
-
+    
+    /*
     private void OnCollisionEnter(Collision collision) 
     {
         if (collision.gameObject.tag == "PatrolTarget")
@@ -172,6 +186,7 @@ public class EnemyController : MonoBehaviour
             UpdatePatrolTarget();
         }
     }
+    */
 
     private void OnTriggerEnter(Collider other)
     {
