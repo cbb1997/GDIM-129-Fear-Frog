@@ -16,11 +16,9 @@ public class EnemyDataClass : CharacterDataClass
     [SerializeField] private float m_ActivationDistance;
     public float ActivationDistance { get { return m_ActivationDistance; } }
 
-    [SerializeField] private float m_AggroTime;
-    public float AggroTime { get { return m_AggroTime; } set { m_AggroTime = value;  } }
-
-    [SerializeField] private float m_SightDistance;
+    [SerializeField] private float m_SightDistance, m_HearDistance;
     public float SightDistance { get { return m_SightDistance; } }
+    public float HearDistance { get { return m_HearDistance; } }
 }
 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptable Objects/EnemyData")]

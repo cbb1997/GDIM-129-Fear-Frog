@@ -29,6 +29,8 @@ public class EnemyController : MonoBehaviour
     private GameObject[] m_PatrolTargets;
     private int m_PatrolIndex;
 
+    [ReadOnly][SerializeField] private float m_AggroTime;
+
     private void Start()
     {
         GameController.OnGameStateChanged += GameStateListener;
@@ -55,12 +57,24 @@ public class EnemyController : MonoBehaviour
     private float DetectPlayer() 
     {
         RaycastHit vision = DrawRay();
-        if (vision.collider != null && vision.collider.gameObject.tag != "Player")
+
+        //Debugger.Log($"{vision.collider?.gameObject}");
+        if (vision.collider?.gameObject.tag == "Player")
         {
-            return float.MaxValue;
+            return vision.distance;
         }
 
-        return vision.distance;
+        RaycastHit[] hearing = DrawSphere();
+
+        foreach (var e in hearing)
+        {
+            if (e.collider?.gameObject.tag == "Player")
+            {
+                return GetPlayerDistance();
+            }
+        }
+
+        return m_EnemyData.DataClass.SightDistance;
     }
 
     private float GetPlayerDistance()
@@ -75,6 +89,12 @@ public class EnemyController : MonoBehaviour
         Physics.Raycast(OffestPosition(), transform.TransformDirection(Vector3.forward), out hit, m_EnemyData.DataClass.SightDistance);
         Debug.DrawRay(OffestPosition(), transform.TransformDirection(Vector3.forward) * m_EnemyData.DataClass.SightDistance, Color.red);
         return hit;
+    }
+
+    // Draws a spherecast and returns any hits
+    private RaycastHit[] DrawSphere()
+    {
+        return Physics.SphereCastAll(OffestPosition(), m_EnemyData.DataClass.HearDistance, transform.TransformDirection(Vector3.down), 0);
     }
 
     // Calculate the offest position used for drawing raycasts
@@ -163,16 +183,16 @@ public class EnemyController : MonoBehaviour
         {
             if (playerDistance < m_EnemyData.DataClass.SightDistance)
             {
-                m_EnemyData.DataClass.AggroTime += Time.deltaTime;
+                m_AggroTime += Time.deltaTime;
             }
             else
             {
-                m_EnemyData.DataClass.AggroTime -= Time.deltaTime;
+                m_AggroTime -= Time.deltaTime;
             }
 
-            if (m_EnemyData.DataClass.AggroTime <= 0)
+            if (m_AggroTime <= 0)
             {
-                m_EnemyData.DataClass.AggroTime = 0;
+                m_AggroTime = 0;
                 SetCurrentState(EnemyState.Alert);
             }
         }
@@ -259,4 +279,5 @@ public class EnemyController : MonoBehaviour
             UpdatePatrolTarget();
         }
     }
+
 }

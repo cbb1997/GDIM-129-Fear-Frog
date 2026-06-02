@@ -19,5 +19,5 @@ MonoBehaviour:
     m_AggroThreshold: 20
     m_AttackThreshold: 2
     m_ActivationDistance: 50
-    m_AggroTime: 25
     m_SightDistance: 20
+    m_HearDistance: 5
