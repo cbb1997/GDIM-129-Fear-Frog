@@ -31,6 +31,7 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         GameController.OnGameStateChanged += GameStateListener;
+        EnemyController.OnEnemyStateChange += EnemyStateListiner;
         InitPatrol();
     }
 
@@ -134,6 +135,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void EnemyStateListiner(EnemyState oldState, EnemyState newState)
+    { }
+
     private void UpdateCurrentState()
     {
         if (m_CurrentState == EnemyState.Inactive) return;
@@ -224,16 +228,6 @@ public class EnemyController : MonoBehaviour
     public void Respawn() { }
     public void Kill() { }
     
-    /*
-    private void OnCollisionEnter(Collision collision) 
-    {
-        if (collision.gameObject.tag == "PatrolTarget")
-        {
-            UpdatePatrolTarget();
-        }
-    }
-    */
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "PatrolTarget")
