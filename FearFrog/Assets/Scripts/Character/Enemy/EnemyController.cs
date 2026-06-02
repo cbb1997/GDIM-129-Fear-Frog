@@ -24,6 +24,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private EnemyState m_StartingState;
     [ReadOnly][SerializeField] private EnemyState m_CurrentState;
 
+    // Audio for Monster
+    [SerializeField] private float roarDelay = 6f;
+    private float roarTimer;
+
     public static Action<EnemyState, EnemyState> OnEnemyStateChange;
 
     private GameObject[] m_PatrolTargets;
@@ -44,6 +48,14 @@ public class EnemyController : MonoBehaviour
     {
         UpdateCurrentState();
         ExecuteStateBevaior();
+
+        roarTimer -= Time.deltaTime;
+
+        if (roarTimer <= 0f)
+        {
+            SoundManager.PlaySound(SoundType.ROAR, 0.7f);
+            roarTimer = UnityEngine.Random.Range(20f, 30f);
+        }
     }
 
     #region Helpers
