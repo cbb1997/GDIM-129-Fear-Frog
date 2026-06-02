@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using static UnityEditor.Timeline.Actions.MenuPriority;
 
 public class InventoryUI : MonoBehaviour
 {
