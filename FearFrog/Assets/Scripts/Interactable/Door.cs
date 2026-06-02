@@ -4,6 +4,7 @@ public class Door : MonoBehaviour
 {
     [SerializeField] private int DoorID;
     [SerializeField] private InventoryData inventoryData;
+    [SerializeField] private string RequiredKeyName;
 
     [Header ("TestStuff")]
     [SerializeField] private float pushForce = 10f;
@@ -19,10 +20,12 @@ public class Door : MonoBehaviour
         if (inventoryData.CheckItems(DoorID))
         {
             rb.AddForce(transform.forward * pushForce, ForceMode.Impulse);
+            UILocator.Instance.notifUI.HideNotif();
+
         }
         else
         {
-            Debug.Log("Find Key!");
+            UILocator.Instance.notifUI.ShowNotif(RequiredKeyName);
         }
 
     }
