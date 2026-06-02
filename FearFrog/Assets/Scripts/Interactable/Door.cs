@@ -12,7 +12,7 @@ public class Door : MonoBehaviour
 
     private void OnMouseDown()
     {
-        SwitchState();   
+        SwitchState();
     }
 
     private void SwitchState()

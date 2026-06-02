@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1342244144526327732}
   - component: {fileID: 467643946630600619}
-  - component: {fileID: 1057836048906638710}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -28,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1551722458466132472}
@@ -57,19 +56,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1057836048906638710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4225505261005442129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 718bb88307a305d41bb208d164812078, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Door
-  m_Animator: {fileID: 467643946630600619}
 --- !u!1 &5225159207239254569
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,6 +274,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4050657530681066408}
+    - targetCorrespondingSourceObject: {fileID: 1936011742919702, guid: df2f14ece3a3a0847aad4f1407b39c50,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7181884589874995177}
   m_SourcePrefab: {fileID: 100100000, guid: df2f14ece3a3a0847aad4f1407b39c50, type: 3}
 --- !u!4 &5642046021475024006 stripped
 Transform:
@@ -322,3 +312,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2372003, y: 2.5489, z: 0.13960002}
   m_Center: {x: 0.00000011920929, y: 1.27445, z: -0.03130001}
+--- !u!114 &7181884589874995177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5646162579679772606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 718bb88307a305d41bb208d164812078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Door
+  m_Animator: {fileID: 467643946630600619}
