@@ -23,6 +23,8 @@ public class EnemyController : MonoBehaviour
 
     [ReadOnly][SerializeField] private EnemyState m_CurrentState;
 
+    public static Action<EnemyState, EnemyState> OnEnemyStateChange;
+
     private GameObject[] m_PatrolTargets;
     private int m_PatrolIndex;
 
@@ -34,11 +36,16 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        //UpdateCurrentState();
-        SetCurrentState(EnemyState.Aggressive);
+        UpdateCurrentState();
+        ExecuteStateBevaior();
     }
 
     #region Helpers
+
+    private int StateAsInt()
+    {
+        return (int)m_CurrentState;
+    }
 
     // Returns at integer value indicating an "aggro meter"
     private int DetectPlayer() 
@@ -50,6 +57,11 @@ public class EnemyController : MonoBehaviour
         }
 
         return (int) (vision.distance * 2);
+    }
+
+    private float GetPlayerDistance()
+    {
+        return Vector3.Distance(transform.position, m_Player.transform.position);
     }
 
     // Draw a raycast and return any hits
@@ -101,26 +113,12 @@ public class EnemyController : MonoBehaviour
 
     private void SetAnimState()
     {
-        m_Animator.SetInteger("AnimState", (int)m_CurrentState);
+        m_Animator.SetInteger("AnimState", StateAsInt());
     }
 
     #endregion
 
     #region State Machine
-
-    private void UpdateCurrentState()
-    {
-        if (m_CurrentState == EnemyState.Inactive) return;
-
-        int playerMeter = DetectPlayer();
-
-        if (playerMeter > m_EnemyData.DataClass.AggroThreshold)
-        {
-            SetCurrentState(EnemyState.Aggressive);
-        }
-       
-        SetCurrentState(EnemyState.Alert);
-    }
 
     // Ensure enemy ai is diabled when the game is inactive
     private void GameStateListener(GameState state)
@@ -136,9 +134,52 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void UpdateCurrentState()
+    {
+        if (m_CurrentState == EnemyState.Inactive) return;
+
+        if (StateAsInt() > 1)
+        {
+            UpdateAggro();
+        }
+        else if (m_CurrentState == EnemyState.Idle)
+        {
+            UpdateIdle();
+        }
+    }
+
+    private void UpdateAggro()
+    {
+        int playerMeter = DetectPlayer();
+
+        if (playerMeter > m_EnemyData.DataClass.AggroThreshold && StateAsInt() < 3)
+        {
+            SetCurrentState(EnemyState.Aggressive);
+        }
+        else if (StateAsInt() > 2)
+        {
+            SetCurrentState(EnemyState.Alert);
+        }
+    }
+
+    private void UpdateIdle()
+    {
+        if (GetPlayerDistance() > m_EnemyData.DataClass.ActivationDistance)
+        {
+            SetCurrentState(EnemyState.Alert);
+        }
+    }
+
     private void SetCurrentState(EnemyState state)
     {
-        switch (state)
+        OnEnemyStateChange?.Invoke(m_CurrentState, state);
+        m_CurrentState = state;
+        SetAnimState();
+    }
+
+    private void ExecuteStateBevaior()
+    {
+        switch (m_CurrentState)
         {
             case EnemyState.Inactive:
                 InactiveBehavior();
@@ -158,9 +199,6 @@ public class EnemyController : MonoBehaviour
             default:
                 break;
         }
-
-        m_CurrentState = state;
-        SetAnimState();
     }
 
     private void InactiveBehavior() { }

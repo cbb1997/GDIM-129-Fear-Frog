@@ -13,6 +13,9 @@ public class EnemyDataClass : CharacterDataClass
     public int AggroThreshold { get { return m_AggroThreshold; } }
     public int AttackThreshold { get { return m_AttackThreshold; } }
 
+    [SerializeField] private float m_ActivationDistance;
+    public float ActivationDistance { get { return m_ActivationDistance; } }
+
     [SerializeField] private float m_AggroTime;
     public float AggroTime { get { return m_AggroTime; } }
 
