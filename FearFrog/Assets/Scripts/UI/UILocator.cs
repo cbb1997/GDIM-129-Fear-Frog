@@ -4,6 +4,7 @@ public class UILocator : MonoBehaviour
 {
     public static UILocator Instance { get; private set; }
     public InventoryUI inventoryUI { get; private set; }
+    public NotifsUI notifUI { get; private set; }
 
 
     private void Awake()
@@ -17,5 +18,6 @@ public class UILocator : MonoBehaviour
 
         GameObject uiObject = GameObject.FindWithTag("UI");
         inventoryUI = uiObject.GetComponent<InventoryUI>();
+        notifUI = uiObject.GetComponent<NotifsUI>();
     }
 }
