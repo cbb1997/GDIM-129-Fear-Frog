@@ -24,7 +24,7 @@ public class EnemyController : MonoBehaviour
     [ReadOnly][SerializeField] private EnemyState m_CurrentState;
 
     private GameObject[] m_PatrolTargets;
-    [ReadOnly][SerializeField] private int m_PatrolIndex;
+    private int m_PatrolIndex;
 
     private void Start()
     {
@@ -34,7 +34,8 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        UpdateCurrentState();
+        //UpdateCurrentState();
+        SetCurrentState(EnemyState.Aggressive);
     }
 
     #region Helpers
@@ -75,6 +76,13 @@ public class EnemyController : MonoBehaviour
     private void InitPatrol()
     {
         m_PatrolTargets = GameObject.FindGameObjectsWithTag("PatrolTarget");
+
+        if (m_PatrolTargets.Length <= 0)
+        {
+            m_PatrolIndex = -1;
+            return;
+        }
+
         m_PatrolIndex = new System.Random().Next(m_PatrolTargets.Length - 1);
     }
 
