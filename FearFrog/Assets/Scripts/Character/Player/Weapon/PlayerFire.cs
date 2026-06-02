@@ -23,6 +23,9 @@ public class PlayerFire : MonoBehaviour
         {
             // Fire
             PlayerController.Instance.TriggerOnFire();
+
+            SoundManager.PlaySound(SoundType.SHOOTING, 0.8f);
+            
             m_ammoLeft -= 1;
             
             Ray ray = PlayerController.Instance.Camera.GetComponent<Camera>().ScreenPointToRay(
