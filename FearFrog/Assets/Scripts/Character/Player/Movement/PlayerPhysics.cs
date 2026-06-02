@@ -23,7 +23,7 @@ public class PlayerPhysics : MonoBehaviour
 
     // audio variables
     [SerializeField] private float footstepDelay = 0.8f;
-    [SerializeField] private float footstepVolume = 0.2f;
+    [SerializeField] private float footstepVolume = 0.15f;
     private float footstepTimer;
     
     
