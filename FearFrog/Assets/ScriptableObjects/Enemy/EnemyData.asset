@@ -16,8 +16,8 @@ MonoBehaviour:
     m_Health: 30
     m_Position: {x: 0, y: 0, z: 0}
     m_RespawnPos: {x: 0, y: 0, z: 0}
-    m_AggroThreshold: 2
-    m_AttackThreshold: 5
+    m_AggroThreshold: 20
+    m_AttackThreshold: 2
     m_ActivationDistance: 50
     m_AggroTime: 25
-    m_SightDistance: 5
+    m_SightDistance: 20

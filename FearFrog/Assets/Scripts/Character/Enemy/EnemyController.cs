@@ -21,6 +21,7 @@ public class EnemyController : MonoBehaviour
     
     [SerializeField] private float m_YOffset;
 
+    [SerializeField] private EnemyState m_StartingState;
     [ReadOnly][SerializeField] private EnemyState m_CurrentState;
 
     public static Action<EnemyState, EnemyState> OnEnemyStateChange;
@@ -32,7 +33,9 @@ public class EnemyController : MonoBehaviour
     {
         GameController.OnGameStateChanged += GameStateListener;
         EnemyController.OnEnemyStateChange += EnemyStateListiner;
+        
         InitPatrol();
+        SetCurrentState(m_StartingState);
     }
 
     private void Update()
@@ -48,16 +51,16 @@ public class EnemyController : MonoBehaviour
         return (int)m_CurrentState;
     }
 
-    // Returns at integer value indicating an "aggro meter"
-    private int DetectPlayer() 
+    // "Sees" the player with a raycast
+    private float DetectPlayer() 
     {
         RaycastHit vision = DrawRay();
         if (vision.collider != null && vision.collider.gameObject.tag != "Player")
         {
-            return 0;
+            return float.MaxValue;
         }
 
-        return (int) (vision.distance * 2);
+        return vision.distance;
     }
 
     private float GetPlayerDistance()
@@ -154,15 +157,34 @@ public class EnemyController : MonoBehaviour
 
     private void UpdateAggro()
     {
-        int playerMeter = DetectPlayer();
+        float playerDistance = DetectPlayer();
 
-        if (playerMeter > m_EnemyData.DataClass.AggroThreshold && StateAsInt() < 3)
+        if (StateAsInt() > 2)
         {
-            SetCurrentState(EnemyState.Aggressive);
+            if (playerDistance < m_EnemyData.DataClass.SightDistance)
+            {
+                m_EnemyData.DataClass.AggroTime += Time.deltaTime;
+            }
+            else
+            {
+                m_EnemyData.DataClass.AggroTime -= Time.deltaTime;
+            }
+
+            if (m_EnemyData.DataClass.AggroTime <= 0)
+            {
+                m_EnemyData.DataClass.AggroTime = 0;
+                SetCurrentState(EnemyState.Alert);
+            }
         }
-        else if (StateAsInt() > 2)
+        else
         {
-            SetCurrentState(EnemyState.Alert);
+            // Trigger attack
+            // if (playerDistance < m_EnemeyData.DataClass.AttackThreshold) { }
+
+            if (playerDistance < m_EnemyData.DataClass.AggroThreshold)
+            {
+                SetCurrentState(EnemyState.Aggressive);
+            }
         }
     }
 
@@ -205,9 +227,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void InactiveBehavior() { }
+    private void InactiveBehavior() 
+    { }
 
-    private void IdleBehavior() { }
+    private void IdleBehavior() 
+    { }
 
     // If patrol targets exist, use the navmesh to path to the current target
     private void AlertBehavior() 
