@@ -41,4 +41,29 @@ public class InventoryData : ScriptableObject
         return false;
     }
 
+    public bool CheckItems(int itemID)
+    {
+        bool AllNull = true;
+        for (int i = 0; i < m_Items.Length; i++)
+        {
+            if (m_Items[i] != null)
+            {
+                AllNull = false;
+                break;
+            }
+        }
+
+        if (AllNull == false)
+        {
+            foreach (ItemData itemData in m_Items)
+            {
+                if (itemData.DataClass.ID == itemID)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

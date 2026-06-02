@@ -31,8 +31,9 @@ public class GameController : MonoBehaviour
 
     private void StartGame()
     {
-        m_StartingLevel.SetActive(true);
+        //m_StartingLevel.SetActive(true);
         m_Player.SetActive(true);
+        SetGameState(GameState.Active);
     }
 
     private void SetGameState(GameState state)

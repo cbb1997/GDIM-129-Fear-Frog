@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using System;
 
 public enum EnemyState 
 { 
@@ -20,30 +21,68 @@ public class EnemyController : MonoBehaviour
     
     [SerializeField] private float m_YOffset;
 
-    private EnemyState m_CurrentState;
+    [SerializeField] private EnemyState m_StartingState;
+    [ReadOnly][SerializeField] private EnemyState m_CurrentState;
+
+    public static Action<EnemyState, EnemyState> OnEnemyStateChange;
+
+    private GameObject[] m_PatrolTargets;
+    private int m_PatrolIndex;
+
+    [ReadOnly][SerializeField] private float m_AggroTime;
 
     private void Start()
     {
         GameController.OnGameStateChanged += GameStateListener;
+        EnemyController.OnEnemyStateChange += EnemyStateListiner;
+        
+        InitPatrol();
+        SetCurrentState(m_StartingState);
     }
 
     private void Update()
     {
         UpdateCurrentState();
+        ExecuteStateBevaior();
     }
 
-    // Returns at integer value indicating an "aggro meter"
-    private int DetectPlayer() 
+    #region Helpers
+
+    private int StateAsInt()
+    {
+        return (int)m_CurrentState;
+    }
+
+    // "Sees" the player with a raycast
+    private float DetectPlayer() 
     {
         RaycastHit vision = DrawRay();
-        if (vision.collider.gameObject.tag != "Player")
+
+        //Debugger.Log($"{vision.collider?.gameObject}");
+        if (vision.collider?.gameObject.tag == "Player")
         {
-            return 0;
+            return vision.distance;
         }
 
-        return (int) (vision.distance * 2);
+        RaycastHit[] hearing = DrawSphere();
+
+        foreach (var e in hearing)
+        {
+            if (e.collider?.gameObject.tag == "Player")
+            {
+                return GetPlayerDistance();
+            }
+        }
+
+        return m_EnemyData.DataClass.SightDistance;
     }
 
+    private float GetPlayerDistance()
+    {
+        return Vector3.Distance(transform.position, m_Player.transform.position);
+    }
+
+    // Draw a raycast and return any hits
     private RaycastHit DrawRay() 
     {
         RaycastHit hit;
@@ -52,6 +91,13 @@ public class EnemyController : MonoBehaviour
         return hit;
     }
 
+    // Draws a spherecast and returns any hits
+    private RaycastHit[] DrawSphere()
+    {
+        return Physics.SphereCastAll(OffestPosition(), m_EnemyData.DataClass.HearDistance, transform.TransformDirection(Vector3.down), 0);
+    }
+
+    // Calculate the offest position used for drawing raycasts
     private Vector3 OffestPosition()
     {
         return new Vector3(transform.position.x, transform.position.y + m_YOffset, transform.position.z);
@@ -62,22 +108,43 @@ public class EnemyController : MonoBehaviour
         m_EnemyData.DataClass.Position = GetComponent<Transform>().position;
     }
 
-    #region State Machine
-
-    private void UpdateCurrentState()
+    // Find patrol objects in the scene and select and random target
+    private void InitPatrol()
     {
-        if (m_CurrentState == EnemyState.Inactive) return;
+        m_PatrolTargets = GameObject.FindGameObjectsWithTag("PatrolTarget");
 
-        int playerMeter = DetectPlayer();
-
-        if (playerMeter > m_EnemyData.DataClass.AggroThreshold)
+        if (m_PatrolTargets.Length <= 0)
         {
-            SetCurrentState(EnemyState.Aggressive);
+            m_PatrolIndex = -1;
+            return;
         }
-       
-        SetCurrentState(EnemyState.Alert);
+
+        m_PatrolIndex = new System.Random().Next(m_PatrolTargets.Length - 1);
     }
 
+    // Change to a new patrol target
+    private void UpdatePatrolTarget()
+    {
+        if (m_PatrolIndex == m_PatrolTargets.Length - 1)
+        {
+            m_PatrolIndex = 0;
+        }
+        else
+        {
+            ++m_PatrolIndex;
+        }
+    }
+
+    private void SetAnimState()
+    {
+        m_Animator.SetInteger("AnimState", StateAsInt());
+    }
+
+    #endregion
+
+    #region State Machine
+
+    // Ensure enemy ai is diabled when the game is inactive
     private void GameStateListener(GameState state)
     {
         switch (state)
@@ -91,9 +158,74 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void EnemyStateListiner(EnemyState oldState, EnemyState newState)
+    { }
+
+    private void UpdateCurrentState()
+    {
+        if (m_CurrentState == EnemyState.Inactive) return;
+
+        if (StateAsInt() > 1)
+        {
+            UpdateAggro();
+        }
+        else if (m_CurrentState == EnemyState.Idle)
+        {
+            UpdateIdle();
+        }
+    }
+
+    private void UpdateAggro()
+    {
+        float playerDistance = DetectPlayer();
+
+        if (StateAsInt() > 2)
+        {
+            if (playerDistance < m_EnemyData.DataClass.SightDistance)
+            {
+                m_AggroTime += Time.deltaTime;
+            }
+            else
+            {
+                m_AggroTime -= Time.deltaTime;
+            }
+
+            if (m_AggroTime <= 0)
+            {
+                m_AggroTime = 0;
+                SetCurrentState(EnemyState.Alert);
+            }
+        }
+        else
+        {
+            // Trigger attack
+            // if (playerDistance < m_EnemeyData.DataClass.AttackThreshold) { }
+
+            if (playerDistance < m_EnemyData.DataClass.AggroThreshold)
+            {
+                SetCurrentState(EnemyState.Aggressive);
+            }
+        }
+    }
+
+    private void UpdateIdle()
+    {
+        if (GetPlayerDistance() > m_EnemyData.DataClass.ActivationDistance)
+        {
+            SetCurrentState(EnemyState.Alert);
+        }
+    }
+
     private void SetCurrentState(EnemyState state)
     {
-        switch (state)
+        OnEnemyStateChange?.Invoke(m_CurrentState, state);
+        m_CurrentState = state;
+        SetAnimState();
+    }
+
+    private void ExecuteStateBevaior()
+    {
+        switch (m_CurrentState)
         {
             case EnemyState.Inactive:
                 InactiveBehavior();
@@ -113,46 +245,39 @@ public class EnemyController : MonoBehaviour
             default:
                 break;
         }
-
-        m_CurrentState = state;
-        SetAnimState();
     }
 
-    private void InactiveBehavior() { }
+    private void InactiveBehavior() 
+    { }
 
-    private void IdleBehavior() { }
+    private void IdleBehavior() 
+    { }
 
+    // If patrol targets exist, use the navmesh to path to the current target
     private void AlertBehavior() 
     {
-        m_Agent.SetDestination(GetPatrolTarget());
-    }
+        if (m_PatrolIndex < 0) return;
 
-    private Vector3 GetPatrolTarget() 
-    {
-        return Vector3.zero;
+        m_Agent.SetDestination(m_PatrolTargets[m_PatrolIndex].transform.position);
     }
 
     private void AggressiveBehavior() 
     {
         m_Agent.SetDestination(m_Player.transform.position);
-        //StartCoroutine(EngageAggro());
-    }
-
-    private IEnumerator EngageAggro()
-    {
-        m_Agent.SetDestination(m_Player.transform.position);
-
-        yield return new WaitForSeconds(m_EnemyData.DataClass.AggroTime);
     }
 
     private void AttackBehavior() { }
-
-    private void SetAnimState() {
-        m_Animator.SetInteger("AnimState", (int) m_CurrentState);
-    }
     #endregion
 
     public void Respawn() { }
     public void Kill() { }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "PatrolTarget")
+        {
+            UpdatePatrolTarget();
+        }
+    }
 
 }
