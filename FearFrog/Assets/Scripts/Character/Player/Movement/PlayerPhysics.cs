@@ -20,6 +20,11 @@ public class PlayerPhysics : MonoBehaviour
     private float m_dfCoef = 0.4f;          // Dynamic friction coefficient
     private float m_stepUpHeight;       // Player floating height
     private float m_stepDownHeight;    // Player step down distance
+
+    // audio variables
+    [SerializeField] private float footstepDelay = 0.8f;
+    [SerializeField] private float footstepVolume = 0.2f;
+    private float footstepTimer;
     
     
     // Start
@@ -48,6 +53,9 @@ public class PlayerPhysics : MonoBehaviour
         // Ground check
         GroundCheck();
         
+        // add footsteps
+        HandleFootsteps();
+
         // Player physics
         if (PlayerController.Instance.IsGrounded)       // Player on ground
         {
@@ -179,6 +187,34 @@ public class PlayerPhysics : MonoBehaviour
             // Grounded point
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(PlayerController.Instance.GroundHit.point, 0.05f);
+        }
+    }
+
+    private void HandleFootsteps()
+    {
+        bool isMoving = PlayerController.Instance.PlayerRb.linearVelocity.magnitude > 0.2f;
+        bool isGrounded = PlayerController.Instance.IsGrounded;
+
+        if (isMoving && isGrounded)
+        {
+            float currentDelay = footstepDelay;
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                currentDelay = footstepDelay * 0.5f;
+            }
+
+            footstepTimer -= Time.fixedDeltaTime;
+            
+            if (footstepTimer <= 0)
+            {
+                SoundManager.PlaySound(SoundType.WALKING, footstepVolume);
+                footstepTimer = currentDelay;
+            }
+        }
+        else
+        {
+            footstepTimer = 0f;
         }
     }
 }
