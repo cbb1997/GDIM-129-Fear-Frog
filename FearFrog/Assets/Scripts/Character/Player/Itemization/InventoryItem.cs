@@ -10,6 +10,10 @@ public class InventoryItem : MonoBehaviour
     private void OnMouseDown()
     {
         OnAcquired?.Invoke(m_ItemData);
+
+        // KEY jingle
+        SoundManager.PlaySound(SoundType.PICKUPKEY, 0.5f);
+        
         Destroy(gameObject);
     }
 }
