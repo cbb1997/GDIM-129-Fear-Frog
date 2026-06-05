@@ -8,13 +8,14 @@ public class LockedDoor : MonoBehaviour
     [SerializeField] private Animator m_Animator;
 
     public static Action OnFailedUnlock;
-    
+
     private DoorState m_CurrentState;
-    private bool m_Locked = true;
 
     private void OnMouseDown()
     {
-        if (m_Locked && !m_InventoryData.CheckItems(m_KeyID))
+        Debugger.Log($"{m_KeyID}: {m_InventoryData.CheckItems(m_KeyID)}");
+
+        if (!m_InventoryData.CheckItems(m_KeyID))
         {
             OnFailedUnlock?.Invoke();
             return;
@@ -34,18 +35,4 @@ public class LockedDoor : MonoBehaviour
         m_CurrentState = state;
         m_Animator.SetInteger("AnimState", (int)m_CurrentState);
     }
-
-    /*
-    private void OnMouseDown()
-    {
-        if (inventoryData.CheckItems(DoorID))
-        {
-            
-        }
-        else
-        {
-            UILocator.Instance.notifUI.ShowNotif(RequiredKeyName);
-        }
-    }
-    */
 }
