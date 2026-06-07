@@ -43,7 +43,8 @@ public class PlayerMovement : MonoBehaviour
         
         // Link jump, sprint, and crouch functionality
         InputController.Instance.Input.Player.Jump.performed += Jump;
-        InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
+        InputController.Instance.Input.Player.Sprint.performed += StartSprintingTrigger;
+        InputController.Instance.Input.Player.Sprint.canceled += StopSprintingTrigger;
         // InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
         
         PlayerController.Instance.OnRecoilCompensation += RecoilCompensate;
@@ -156,43 +157,59 @@ public class PlayerMovement : MonoBehaviour
     
     
     // Toggle player sprint
-    private void ToggleSprint(InputAction.CallbackContext ctx)
-    {
-        if (PlayerController.Instance.IsGrounded)   // Only allow toggling when player's grounded
-        {
-            if (PlayerController.Instance.IsSprinting)      // Stop sprinting
-            {
-                StopSprinting();
-            }
-            else                                        // Start sprinting
-            {
-                StopCrouching();
-                StartSprinting();
-            }
-        }
-    }
+    // private void ToggleSprint(InputAction.CallbackContext ctx)
+    // {
+    //     if (PlayerController.Instance.IsGrounded)   // Only allow toggling when player's grounded
+    //     {
+    //         if (PlayerController.Instance.IsSprinting)      // Stop sprinting
+    //         {
+    //             StopSprinting();
+    //         }
+    //         else                                        // Start sprinting
+    //         {
+    //             StopCrouching();
+    //             StartSprinting();
+    //         }
+    //     }
+    // }
 
+    private void StartSprintingTrigger(InputAction.CallbackContext ctx)
+    {
+        StartSprinting();
+    }
+    
     private void StartSprinting()   // Start sprinting
     {
-        if (!PlayerController.Instance.IsSprinting)
+        if (PlayerController.Instance.IsGrounded)
         {
-            PlayerController.Instance.IsSprinting = true;
-            m_currMoveAcceleration = m_sprintAcceleration;
-            m_currMaxAirVelocity = m_maxSprintAirVelocity;
-            // Invoke event
-            PlayerController.Instance.TriggerOnStartSprinting();
+            if (!PlayerController.Instance.IsSprinting)
+            {
+                PlayerController.Instance.IsSprinting = true;
+                m_currMoveAcceleration = m_sprintAcceleration;
+                m_currMaxAirVelocity = m_maxSprintAirVelocity;
+                // Invoke event
+                PlayerController.Instance.TriggerOnStartSprinting();
+            }
         }
     }
 
+    private void StopSprintingTrigger(InputAction.CallbackContext ctx)
+    {
+        StopSprinting();
+    }
+    
     private void StopSprinting()    // Stop sprinting
     {
-        if (PlayerController.Instance.IsSprinting)
+        if (PlayerController.Instance.IsGrounded)
         {
-            PlayerController.Instance.IsSprinting = false;
-            m_currMoveAcceleration = m_walkAcceleration;
-            m_currMaxAirVelocity = m_maxWalkAirVelocity;
-            // Invoke event
-            PlayerController.Instance.TriggerOnBackToWalking();
+            if (PlayerController.Instance.IsSprinting)
+            {
+                PlayerController.Instance.IsSprinting = false;
+                m_currMoveAcceleration = m_walkAcceleration;
+                m_currMaxAirVelocity = m_maxWalkAirVelocity;
+                // Invoke event
+                PlayerController.Instance.TriggerOnBackToWalking();
+            }
         }
     }
     
