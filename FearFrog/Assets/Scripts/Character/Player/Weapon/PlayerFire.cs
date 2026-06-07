@@ -7,6 +7,8 @@ public class PlayerFire : MonoBehaviour
     // Member variables
     private int m_ammoLeft = 100;
     private float m_maxBulletDist = 200f;
+    private float m_defaultCoolDown = 2f;
+    private float m_currCoolDown = 0f;
     
     
     // Start
@@ -16,10 +18,20 @@ public class PlayerFire : MonoBehaviour
         InputController.Instance.Input.Player.Fire.performed += Fire;
     }
 
+    // Update
+    private void Update()
+    {
+        // Update firing cooldown
+        if (m_currCoolDown > 0f)
+        {
+            m_currCoolDown -= Time.deltaTime;
+        }
+    }
+
     // Player pistol fire
     private void Fire(InputAction.CallbackContext ctx)
     {
-        if (m_ammoLeft > 0)
+        if (m_currCoolDown <= 0f && m_ammoLeft > 0)
         {
             // Fire
             PlayerController.Instance.TriggerOnFire();
@@ -35,6 +47,9 @@ public class PlayerFire : MonoBehaviour
             {
                 // Hit!
             }
+            
+            // Set coolDown
+            m_currCoolDown = m_defaultCoolDown;
         }
     }
 }
