@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
         // Link jump, sprint, and crouch functionality
         InputController.Instance.Input.Player.Jump.performed += Jump;
         InputController.Instance.Input.Player.Sprint.performed += ToggleSprint;
-        InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
+        // InputController.Instance.Input.Player.Crouch.performed += ToggleCrouch;
         
         PlayerController.Instance.OnRecoilCompensation += RecoilCompensate;
     }
