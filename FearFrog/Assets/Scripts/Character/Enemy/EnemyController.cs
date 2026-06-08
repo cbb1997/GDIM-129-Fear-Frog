@@ -48,6 +48,13 @@ public class EnemyController : MonoBehaviour
     {
         UpdateCurrentState();
         ExecuteStateBevaior();
+        
+
+        if (GetPlayerDistance() < 2.5f)
+        {
+            Debug.Log("Monster Caught player");
+            GameController.EndGame();
+        }
 
         roarTimer -= Time.deltaTime;
 
@@ -306,6 +313,11 @@ public class EnemyController : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            GameController.EndGame();
+            return;
+        }
         if (other.gameObject.tag == "PatrolTarget")
         {
             UpdatePatrolTarget();

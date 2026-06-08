@@ -17,14 +17,18 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject m_Player;
     [SerializeField] private GameObject m_StartingLevel;
     [SerializeField] private GameObject m_HUD;
+    [SerializeField] private GameObject m_GameOverScreen;
 
     public static Action<GameState> OnGameStateChanged;
 
     private GameState m_CurrentState;
 
+    private static GameController instance;
+
     private void Start()
     {
         DontDestroyOnLoad(this);
+
 
         MenuController.OnStartInitialized += StartGame;
         MenuController.OnQuitInitialized += QuitGame;
@@ -51,5 +55,21 @@ public class GameController : MonoBehaviour
         return;
 #endif
         Application.Quit();
+    }
+
+    public static void EndGame()
+    {
+        if (instance == null) return;
+
+        instance.m_GameOverScreen.SetActive(true);
+
+        Time.timeScale = 0f;
+
+        instance.SetGameState(GameState.Over);
+    }
+
+    private void Awake()
+    {
+        instance = this;
     }
 }
