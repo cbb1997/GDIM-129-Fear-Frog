@@ -7,7 +7,7 @@ public class InventoryData : ScriptableObject
     [SerializeField] private ItemData[] m_Items;
     public ItemData[] Items { get { return m_Items; } }
 
-    public static event Action OnAddItem;
+    public static Action OnAddItem;
 
     public ItemDataClass[] GetItemDataClasses()
     {
@@ -43,24 +43,11 @@ public class InventoryData : ScriptableObject
 
     public bool CheckItems(int itemID)
     {
-        bool AllNull = true;
-        for (int i = 0; i < m_Items.Length; i++)
+        foreach (ItemData itemData in m_Items)
         {
-            if (m_Items[i] != null)
+            if (itemData?.DataClass.ID == itemID)
             {
-                AllNull = false;
-                break;
-            }
-        }
-
-        if (AllNull == false)
-        {
-            foreach (ItemData itemData in m_Items)
-            {
-                if (itemData.DataClass.ID == itemID)
-                {
-                    return true;
-                }
+                return true;
             }
         }
 
