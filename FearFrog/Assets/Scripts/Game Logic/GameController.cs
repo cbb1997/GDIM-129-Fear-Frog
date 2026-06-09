@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameData m_GameData;
     
     [SerializeField] private GameObject m_Player;
-    [SerializeField] private GameObject m_HUD, m_MainMenu, m_GameOverScreen;
+    [SerializeField] private GameObject m_HUD, m_GameOverScreen, m_WinScreen;
 
     public static Action<GameState> OnGameStateChanged;
     private static GameController instance;
@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour
 
         MenuController.OnStartInitialized += StartGame;
         MenuController.OnQuitInitialized += QuitGame;
+        EndCollider.OnPlayerWon += WinGame;
     }
 
     private void StartGame()
@@ -82,6 +83,14 @@ public class GameController : MonoBehaviour
         return;
 #endif
         Application.Quit();
+    }
+
+    private void WinGame()
+    {
+        m_Player.SetActive(false);
+        m_HUD.SetActive(false);
+        m_WinScreen.SetActive(true);
+        SetGameState(GameState.Over);
     }
 
     public static void EndGame()
