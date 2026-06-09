@@ -38,7 +38,7 @@ public class GameController : MonoBehaviour
         if (m_Player == null)
         {
             m_Player = GameObject.FindWithTag("Player");
-            Debugger.Log($"{m_Player}");
+            Debugger.Log($"{m_Player}: {m_Player == null}");
             //m_Player = FindAnyObjectByType<PlayerController>().gameObject;
         }
 
