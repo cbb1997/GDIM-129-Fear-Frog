@@ -6,7 +6,7 @@ public class InventoryController : MonoBehaviour
 
     void Start()
     {
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
         InventoryItem.OnAcquired += AddItem;
     }
 

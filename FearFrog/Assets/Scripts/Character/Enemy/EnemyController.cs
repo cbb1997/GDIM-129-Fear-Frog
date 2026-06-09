@@ -49,10 +49,8 @@ public class EnemyController : MonoBehaviour
         UpdateCurrentState();
         ExecuteStateBevaior();
         
-
         if (GetPlayerDistance() < 2.5f)
         {
-            Debug.Log("Monster Caught player");
             GameController.EndGame();
         }
 

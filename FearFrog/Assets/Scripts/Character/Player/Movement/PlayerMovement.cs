@@ -37,9 +37,11 @@ public class PlayerMovement : MonoBehaviour
         m_currMoveAcceleration = m_walkAcceleration;
         m_currMaxAirVelocity = m_maxWalkAirVelocity;
         
-        // Lock cursor
+        // Handled by game controller
+        /*
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        */
         
         // Link jump, sprint, and crouch functionality
         InputController.Instance.Input.Player.Jump.performed += Jump;

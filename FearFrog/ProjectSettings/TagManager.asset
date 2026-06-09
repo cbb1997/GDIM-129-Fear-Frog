@@ -8,6 +8,7 @@ TagManager:
   - Item
   - UI
   - PatrolTarget
+  - HUD
   layers:
   - Default
   - TransparentFX
